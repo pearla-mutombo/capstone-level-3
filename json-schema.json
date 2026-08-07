@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "novusProducts": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "src": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "price": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "products": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "src": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "price": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reviews"
+          }
+        }
+      }
+    },
+    "reviews": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stars": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "product_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "products": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/products"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "users": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/users"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "students": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "level": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "subjects": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "password": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reviews"
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "novusProducts": {
+      "$ref": "#/definitions/novusProducts"
+    },
+    "products": {
+      "$ref": "#/definitions/products"
+    },
+    "reviews": {
+      "$ref": "#/definitions/reviews"
+    },
+    "students": {
+      "$ref": "#/definitions/students"
+    },
+    "subjects": {
+      "$ref": "#/definitions/subjects"
+    },
+    "users": {
+      "$ref": "#/definitions/users"
+    }
+  }
+}
