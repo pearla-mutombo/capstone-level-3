@@ -1,4 +1,6 @@
-import benefitsData from "../data/benefitsData.js";
+import { Fragment } from "react/jsx-runtime";
+import { benefits } from "../data/benefitsData";
+
 
 export default function Benefits() {
   return (
@@ -19,28 +21,27 @@ export default function Benefits() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <article>
-            {benefits.map(toBenefit)}
-            </article>
+          <article>{benefits.map(toDetailsBen)}</article>
         </div>
       </div>
     </section>
   );
 
-  function toBenfits(benefits) {
-    const key = benefit.id;
+  function toDetailsBen() {
+    const key = benefits.id;
     const details = (
       <Fragment key={key}>
         <dt>
           <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-            {benefit.id}
+            {benefits.id}
           </div>
 
-          <div className="text-4xl mb-4">{benefit.icon}</div>
-          <h3 className="text-xl font-bold text-gray-900">{benefit.title}</h3>
+          <div className="text-4xl mb-4">{benefits.icon}</div>
+
+          <h3 className="text-xl font-bold text-gray-900">{benefits.title}</h3>
         </dt>
         <dd>
-          <p className="text-gray-600 mt-3">{benefit.description}</p>
+          <p className="text-gray-600 mt-3">{benefits.description}</p>
         </dd>
       </Fragment>
     );

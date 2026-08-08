@@ -22,12 +22,13 @@ export default function Categories() {
   );
 
   function toDetailsCat() {
-    const key = item + index;
+    const key = categories.id;
     const details = (
       <Fragment key={key}>
         <dt className="bg-blue-100 rounded-xl p-8 text-center text-xl font-semibold hover:bg-blue-200 cursor-pointer">
-          {category}
+          {categories.id} + {categories.name} + {categories.icon}
         </dt>
+        <dd>{categories.description}</dd>
       </Fragment>
     );
   }

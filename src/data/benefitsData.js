@@ -1,4 +1,4 @@
-const benefits = [
+export const benefits = [
   {
     id: 1,
     icon: "🚚",
@@ -25,4 +25,3 @@ const benefits = [
   },
 ];
 
-export default benefits;

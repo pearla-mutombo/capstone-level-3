@@ -5,18 +5,18 @@ export default function Header() {
         <h1 className="text-3xl font-bold">NOVUS Market</h1>
       </nav>
       <ul className="flex gap-6 font-medium">
-        <il>
+        <li>
           <a href="/">Home</a>
-        </il>
-        <il>
+        </li>
+        <li>
           <a href="/products">Products</a>
-        </il>
-        <il>
+        </li>
+        <li>
           <a href="/cart">Cart</a>
-        </il>
-        <il>
+        </li>
+        <li>
           <a href="/login">Login</a>
-        </il>
+        </li>
       </ul>
     </header>
   );

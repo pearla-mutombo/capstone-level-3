@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import Button from "../components/Button";
+import { useRef } from "react";
 
-export default function Login() {
+export default function Login({setLogin, user}) {
     const [email, setEmail] = useState("");
     const [password, setPasswrod] = useState("");
     const [loginError, setLoginError] = useState("");
 
     const navigate = useNavigate();
+
+    useEffect(componentDidUpdate, []);
+
     return(
         <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
 

@@ -25,64 +25,42 @@ export default function Products() {
   }
 
   let filteredProducts = products.filter((product) => {
-
     const matchesSearch = product.name
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchesCategory =
-      category === "All" ||
-      product.category === category;
+    const matchesCategory = category === "All" || product.category === category;
 
     return matchesSearch && matchesCategory;
   });
 
   if (sortOption === "name") {
-    filteredProducts.sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   if (sortOption === "priceLow") {
-    filteredProducts.sort((a, b) =>
-      a.price - b.price
-    );
+    filteredProducts.sort((a, b) => a.price - b.price);
   }
 
   if (sortOption === "priceHigh") {
-    filteredProducts.sort((a, b) =>
-      b.price - a.price
-    );
+    filteredProducts.sort((a, b) => b.price - a.price);
   }
 
   return (
     <main className="min-h-screen bg-gray-50 py-12">
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-gray-900">NOVUS Products</h1>
 
-          <h1 className="text-4xl font-bold text-gray-900">
-            NOVUS Products
-          </h1>
-
-          <p className="text-gray-600 mt-3">
-            Find products you'll love.
-          </p>
-
+          <p className="text-gray-600 mt-3">Find products you'll love.</p>
         </div>
 
         {/* Search and Filters */}
 
         <div className="bg-white rounded-xl shadow-md p-6 mb-10">
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
             <div>
-              <label
-                htmlFor="search"
-                className="block font-medium mb-2"
-              >
+              <label htmlFor="search" className="block font-medium mb-2">
                 Search Products
               </label>
 
@@ -97,10 +75,7 @@ export default function Products() {
             </div>
 
             <div>
-              <label
-                htmlFor="category"
-                className="block font-medium mb-2"
-              >
+              <label htmlFor="category" className="block font-medium mb-2">
                 Category
               </label>
 
@@ -108,8 +83,7 @@ export default function Products() {
                 id="category"
                 value={category}
                 onChange={handleCategoryChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3"
-              >
+                className="w-full border border-gray-300 rounded-lg px-4 py-3">
                 <option value="All">All Categories</option>
                 <option value="Electronics">Electronics</option>
                 <option value="Clothing">Clothing</option>
@@ -118,10 +92,7 @@ export default function Products() {
             </div>
 
             <div>
-              <label
-                htmlFor="sort"
-                className="block font-medium mb-2"
-              >
+              <label htmlFor="sort" className="block font-medium mb-2">
                 Sort Products
               </label>
 
@@ -129,24 +100,15 @@ export default function Products() {
                 id="sort"
                 value={sortOption}
                 onChange={handleSortChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3"
-              >
-                <option value="name">
-                  Name A-Z
-                </option>
+                className="w-full border border-gray-300 rounded-lg px-4 py-3">
+                <option value="name">Name A-Z</option>
 
-                <option value="priceLow">
-                  Price Low to High
-                </option>
+                <option value="priceLow">Price Low to High</option>
 
-                <option value="priceHigh">
-                  Price High to Low
-                </option>
+                <option value="priceHigh">Price High to Low</option>
               </select>
             </div>
-
           </div>
-
         </div>
 
         {/* Products */}
@@ -155,9 +117,7 @@ export default function Products() {
           <Loader />
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold">
-              No products found
-            </h2>
+            <h2 className="text-2xl font-semibold">No products found</h2>
 
             <p className="text-gray-600 mt-2">
               Try changing your search or category.
@@ -165,7 +125,6 @@ export default function Products() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -173,14 +132,9 @@ export default function Products() {
                 handleAddToCart={handleAddToCart}
               />
             ))}
-
           </div>
         )}
-
       </div>
-
     </main>
   );
 }
-
-export default Products;

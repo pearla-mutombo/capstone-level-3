@@ -1,19 +1,17 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Navbar from "./components/Navbar";
+import './App.css';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
-import { BrowserRouter } from "react-router";
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
-      <Navbar />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -25,3 +23,5 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+export default App;
