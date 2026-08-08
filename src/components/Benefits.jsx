@@ -1,28 +1,49 @@
+import benefitsData from "../data/benefitsData.js";
+
 export default function Benefits() {
   return (
-    <section className="py-16 bg-gray-100">
-      <h2 className="text-4xl font-bold text-center mb-10">
-        Why Shop With Us?
-      </h2>
-      <div>
-        <h3 className="font-bold text-xl">🚚Fast Shipping</h3>
-        <p>Quick and reliable delivery.</p>
-      </div>
+    <section className="bg-gray-100 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <p className="text-blue-700 font-semibold uppercase tracking-wide">
+            NOVUS Difference
+          </p>
 
-      <div>
-        <h3 className="font-bold text-xl">🔒Secure Payment</h3>
-        <p>Safe checkout every time.</p>
-      </div>
+          <h2 className="text-4xl font-bold text-gray-900 mt-2">
+            Why Shop With Us?
+          </h2>
 
-      <div>
-        <h3 className="font-bold text-xl">⭐ Quality Products</h3>
-        <p>Carefully selected products.</p>
-      </div>
+          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+            We make online shopping simple, secure, and convenient.
+          </p>
+        </div>
 
-      <div>
-        <h3 className="font-bold text-xl">💬 24/7 Support</h3>
-        <p>We're always here to help.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <article>
+            {benefits.map(toBenefit)}
+            </article>
+        </div>
       </div>
     </section>
   );
+
+  function toBenfits(benefits) {
+    const key = benefit.id;
+    const details = (
+      <Fragment key={key}>
+        <dt>
+          <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+            {benefit.id}
+          </div>
+
+          <div className="text-4xl mb-4">{benefit.icon}</div>
+          <h3 className="text-xl font-bold text-gray-900">{benefit.title}</h3>
+        </dt>
+        <dd>
+          <p className="text-gray-600 mt-3">{benefit.description}</p>
+        </dd>
+      </Fragment>
+    );
+    return details;
+  }
 }
