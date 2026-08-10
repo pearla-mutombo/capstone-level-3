@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirect</title>
+    <script type="module">
+      import { repoRoot } from "./repoRoot.js";
+      const path = window.location.pathname;
+      window.localStorage.setItem("redirectedFrom", path);
+      window.location.replace(repoRoot);
+    </script>
+  </head>
+  <body></body>
+</html>

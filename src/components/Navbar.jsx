@@ -1,134 +1,176 @@
-import { useState, useEffect, Fragment } from "react";
-import { NavLink } from "react-router";
-import useCollapseTWE from "../hooks/useCollapseTWE";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
+import { useStateContext } from "../hooks/useStateContext";
+import Logout from "./Logout";
 
-export default function Navbar({ isLoggedIn, handleLogout, cartCount}) {
-  const [didMount, setDidMount] = useState(false);
+export default function Navbar() {
+  // Get the login information from our shared state.
+  const [login] = useStateContext("login");
 
-  useCollapseTWE();
+  // Get the shopping cart from our shared state.
+  const [cartItems] = useStateContext("cartItems");
 
-  useEffect(componentDidMount, []);
+  // Whether the mobile menu is currently open.
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Check if a user is currently logged in.
+  const isLoggedIn = login.email !== "";
+
+  // Count how many different products are in the cart.
+  const cartCount = cartItems.length;
+
   return (
-    // <!-- Main navigation container -->
-    <nav className="bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <NavLink className="text-2xl font-bold text-blue-700" to="/">
+    <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex min-h-20 items-center justify-between">
+          {/* NOVUS Market Logo */}
+          <NavLink
+            to="/"
+            onClick={closeMobileMenu}
+            className="text-2xl font-extrabold tracking-tight text-blue-700 transition hover:text-blue-800"
+          >
             NOVUS Market
           </NavLink>
-        </div>
-        {/* <!-- Hamburger button for mobile view --> */}
-        <button
-          className="block border-0 bg-transparent px-2 text-black/50 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
-          type="button"
-          data-twe-collapse-init
-          data-twe-target="#navbarSupportedContent3"
-          aria-controls="navbarSupportedContent3"
-          aria-expanded="false"
-          aria-label="Toggle navigation">
-          {/* <!-- Hamburger icon --> */}
-          <span className="[&>svg]:w-7 [&>svg]:stroke-black/50 dark:[&>svg]:stroke-neutral-200">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
 
-        {/* <!-- Collapsible navbar container --> */}
-        <div
-          className="!visible mt-2 hidden flex-grow basis-[100%] items-center lg:mt-0 lg:!flex lg:basis-auto"
-          id="navbarSupportedContent3"
-          data-twe-collapse-item>
-          {/* <!-- Left links --> */}
-          <div
-            className="list-style-none me-auto flex flex-col ps-0 lg:mt-1 lg:flex-row"
-            data-twe-navbar-nav-ref>
-            {/* <!-- Home link --> */}
-            <div
-              className="my-4 ps-2 lg:my-0 lg:pe-1 lg:ps-2"
-              data-twe-nav-item-ref>
-              <NavLink
-                to="/"
-                className="text-gray-700 hover:text-blue-700 font-medium">
+          {/* Desktop Navigation */}
+          <div className="hidden items-center lg:flex">
+            <div className="flex items-center gap-7">
+              {/* Home */}
+              <NavLink to="/" className={getLinkClass}>
                 Home
               </NavLink>
-            </div>
-            {/* <!-- Features link --> */}
-            <div
-              className="mb-4 ps-2 lg:mb-0 lg:pe-1 lg:ps-0"
-              data-twe-nav-item-ref>
-              <NavLink
-                to="/products"
-                className="text-gray-700 hover:text-blue-700 font-medium">
+
+              {/* Products */}
+              <NavLink to="/products" className={getLinkClass}>
                 Products
               </NavLink>
-            </div>
-            <div
-              className="mb-4 ps-2 lg:mb-0 lg:pe-1 lg:ps-0"
-              data-twe-nav-item-ref>
-              <NavLink
-                to="/cart"
-                className="relative text-gray-700 hover:text-blue-700 font-medium">
+
+              {/* Cart */}
+              <NavLink to="/cart" className={getCartLinkClass}>
                 Cart
                 {cartCount > 0 && (
-                  <span className="absolute -top-3 -right-4 bg-blue-700 text-white text-xs rounded-full px-2 py-1">
+                  <span className="absolute -right-4 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-700 px-1 text-xs font-bold text-white">
                     {cartCount}
                   </span>
                 )}
               </NavLink>
+
+              {/* Show different options based on login status */}
+              {isLoggedIn ? (
+                <>
+                  <NavLink to="/dashboard" className={getLinkClass}>
+                    Dashboard
+                  </NavLink>
+
+                  <NavLink to="/profile" className={getLinkClass}>
+                    Profile
+                  </NavLink>
+
+                  {/* Logout component */}
+                  <Logout />
+                </>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className="rounded-lg bg-blue-700 px-5 py-2.5 font-semibold text-white transition hover:bg-blue-800"
+                >
+                  Login
+                </NavLink>
+              )}
             </div>
-            {/* Conditional Rendering  - logged-in nav and login button so the navbar changes depending on whether the user is logged in.*/}
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            className="rounded-lg px-3 py-2 text-2xl text-gray-700 transition hover:bg-gray-100 lg:hidden"
+            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            {isMobileMenuOpen ? "✕" : "☰"}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div
+            id="mobile-menu"
+            className="flex flex-col gap-1 border-t border-gray-200 py-4 lg:hidden"
+          >
+            <NavLink to="/" onClick={closeMobileMenu} className={getMobileLinkClass}>
+              Home
+            </NavLink>
+
+            <NavLink to="/products" onClick={closeMobileMenu} className={getMobileLinkClass}>
+              Products
+            </NavLink>
+
+            <NavLink
+              to="/cart"
+              onClick={closeMobileMenu}
+              className={getMobileLinkClass}
+            >
+              Cart{cartCount > 0 ? ` (${cartCount})` : ""}
+            </NavLink>
+
             {isLoggedIn ? (
               <>
-                <NavLink
-                  to="/dashboard"
-                  className="text-gray-700 hover:text-blue-700 font-medium">
+                <NavLink to="/dashboard" onClick={closeMobileMenu} className={getMobileLinkClass}>
                   Dashboard
                 </NavLink>
 
-                <NavLink
-                  to="/profile"
-                  className="text-gray-700 hover:text-blue-700 font-medium">
+                <NavLink to="/profile" onClick={closeMobileMenu} className={getMobileLinkClass}>
                   Profile
                 </NavLink>
 
-                <button
-                  onClick={handleLogout}
-                  className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
-                  Logout
-                </button>
+                <div className="px-3 pt-2">
+                  <Logout />
+                </div>
               </>
             ) : (
-              <div
-                className="mb-4 ps-2 lg:mb-0 lg:pe-1 lg:ps-0"
-                data-twe-nav-item-ref>
-                <NavLink
-                  to="/login"
-                  className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800">
-                  Login
-                </NavLink>
-              </div>
+              <NavLink
+                to="/login"
+                onClick={closeMobileMenu}
+                className="mx-3 mt-2 rounded-lg bg-blue-700 px-5 py-2.5 text-center font-semibold text-white transition hover:bg-blue-800"
+              >
+                Login
+              </NavLink>
             )}
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-gray-700 text-2xl"
-              aria-label="Open navigation menu">
-              ☰
-            </button>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );
-  function componentDidMount() {
-    setDidMount(true);
+
+   // Close the mobile menu whenever a link is tapped.
+  function closeMobileMenu() {
+    setIsMobileMenuOpen(false);
+  }
+
+
+  // This function gives our desktop links the correct style.
+  function getLinkClass({ isActive }) {
+    if (isActive) {
+      return "font-semibold text-blue-700";
+    }
+
+    return "font-medium text-gray-700 transition hover:text-blue-700";
+  }
+
+  // Same as getLinkClass, but positioned relative so the cart badge can sit on top of it.
+  function getCartLinkClass({ isActive }) {
+    return `relative ${getLinkClass({ isActive })}`;
+  }
+
+  // This function gives our mobile links the correct style.
+  function getMobileLinkClass({ isActive }) {
+    if (isActive) {
+      return "rounded-lg bg-blue-50 px-3 py-2.5 font-semibold text-blue-700";
+    }
+
+    return "rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 hover:text-blue-700";
   }
 }

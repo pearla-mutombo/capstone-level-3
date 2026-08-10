@@ -1,13 +1,18 @@
-import { StrictMode } from "react";
-// import { createRoot } from "react-dom/client";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import './index.css'
-import App from "./App.jsx";
-import "./App.css"
+
+
+import App from "./App";
+import "./index.css";
+import "./App.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <React.StrictMode>
       <App />
-  </StrictMode>,
+  </React.StrictMode>,
 );
 
+// Note: My main.jsx is the entry point for my React application. It finds the
+// root element in my index.html and renders my App component. I
+// also use BrowserRouter here so my application can navigate
+// between pages."

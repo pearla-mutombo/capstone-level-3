@@ -1,7 +1,41 @@
+/* NOVUS Market Main CSS file */
+
+/* Make the page fill the screen. */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100%;
+}
+
 main {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   margin: 20px;
   padding: 20px;
-  font-size:large;
+  font-size: large;
+}
+
+/* Use a simple font for the website. */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f9fafb;
+}
+
+/* Make images responsive. */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make buttons show that they can be clicked. */
+button {
+  cursor: pointer;
+}
+
+/* Make disabled buttons look disabled. */
+button:disabled {
+  cursor: not-allowed;
 }
