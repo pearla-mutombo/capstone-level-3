@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard.jsx";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Page404 from "./components/Page404";
@@ -39,9 +39,10 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={Dashboard} />
-          <Route path="/profile" element={Profile} />
-          <Route path="/register" element={Register} />
+          <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/profile" element={<Profile/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/login" element={<Login/>}/>
           <Route path="*" element={<Page404 />} />
         </Routes>
 

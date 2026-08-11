@@ -1,20 +1,37 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap");
-@tailwind base;
+/* =========================================================
+NOVUS Market
+Additional Styles
+========================================================= */
 
-@layer base {
-  html {
-    @apply text-surface;
-    @apply bg-white;
-  }
-  html.dark {
-    @apply text-neutral-50;
-    @apply bg-body-dark;
-  }
+/* Global text rendering */
+body {
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
 }
 
-@tailwind components;
-@tailwind utilities;
-
+/* Paragraph spacing and readability */
 p {
-  @apply leading-[1.6];
+line-height: 1.6;
+}
+
+/* Smooth image rendering */
+img {
+max-width: 100%;
+height: auto;
+}
+
+/* Make links feel interactive */
+a {
+text-decoration: none;
+}
+
+/* Make buttons feel interactive */
+button {
+font-family: inherit;
+}
+
+/* Prevent horizontal scrolling */
+html,
+body {
+overflow-x: hidden;
 }

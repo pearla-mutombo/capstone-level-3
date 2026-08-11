@@ -1,27 +1,28 @@
-/* NOVUS Market
-   Global application styles
-*/
+/* =========================================================
+   NOVUS Market
+   Application Layout Styles
+   ========================================================= */
 
+/* Make the React application fill the screen. */
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Push the footer toward the bottom on short pages. */
+#root > div {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-}
-
-/* Push the footer to the bottom on short pages. */
+/* Allow the main page content to grow. */
 main {
   flex: 1;
 }
 
+/* Keep the footer at the bottom of the page. */
 footer {
-  padding: 10px;
+  margin-top: auto;
 }
