@@ -1,39 +1,21 @@
 import { createContext, useEffect, useState } from "react";
 
-// This Map stores the shared state for NOVUS Market.
-const initialState = new Map([
-  [
-    "login",
-    {
-      email: "",
-      password: "",
-    },
-  ],
-  ["cartItems", []],
-]);
-
-// This creates a list where our Context objects can be stored
 const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
-
-// Create the list only if it does not already exist
-if (!window[STATE_CONTEXT_LIST]) {
 window[STATE_CONTEXT_LIST] = [];
-}
 
-export function StateContext({ children }) {
+export function StateContext({ children, initialState }) {
+  if (!initialState)
+    throw new Error(
+      "initialState must be a Map object - example: new Map() - that declares all states for child components.",
+    );
 
-  const [didMount, setDidMount] = useState(false);
-  const [Context, setContext] = useState(null);
-
-  // This keeps track of components listening for state changes.
+  const [didMount, setDidMount] = useState();
+  const [Context, setContext] = useState();
+  const [stateVersion, setStateVersion] = useState(1);
   const [listeners] = useState(new Set());
-  // This Map contains our shared application state.
   const [map] = useState(initialState);
-  
-  // Run when the component mounts
-  useEffect(componentDidMount, []);
 
-  // Run when the components unmounts
+  useEffect(componentDidMount, []);
   useEffect(componentWillUnmount, []);
 
   let component = <></>;
@@ -47,21 +29,21 @@ export function StateContext({ children }) {
   return <>{component}</>;
 
   //////////////////////////////////////////////////////////////////
-  // Component lifecycle
+
   function componentDidMount() {
-    const NewContext = createContext();
-    window[STATE_CONTEXT_LIST].push(NewContext);
+    const Context = createContext();
+    window[STATE_CONTEXT_LIST].push(Context);
 
     setDidMount(true);
-    setContext(NewContext);
+    setContext(Context);
   }
+
   function componentWillUnmount() {
     return function () {
       setDidMount(false);
     };
   }
 
-  // Shared state functions
   function subscribe(setter, key) {
     listeners.add({ update: setter, key });
   }

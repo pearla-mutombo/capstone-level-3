@@ -1,8 +1,11 @@
-import useNovusModalTWE from "../hooks/useModalTWE";
 import { useRef } from "react";
+import useModalTWE from "../hooks/useModalTWE";
+import { useStateContext } from "../hooks/useStateContext";
 
-export default function Logout({ setLogin }) {
+export default function Logout() {
   useNovusModalTWE();
+
+  const [, setLogin] = useStateContext("login");
 
   const closeButtonRef = useRef(null);
 
@@ -13,7 +16,7 @@ export default function Logout({ setLogin }) {
         type="button"
         data-twe-modal-init
         data-twe-target="#logoutModal"
-        className="bg-red-600 text-white px-5 py-3 rounded-lg font-semibold hover:bg-red-700">
+        className="rounded-lg bg-red-600 px-5 py-2.5 font-semibold text-white transition hover:bg-red-700">
         Logout
       </button>
 
@@ -25,25 +28,22 @@ export default function Logout({ setLogin }) {
         aria-labelledby="logoutModalLabel"
         aria-hidden="true">
         <div className="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]">
-          <div className="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none dark:bg-surface-dark">
-            {" "}
-            {/* Modal Header */}{" "}
-            <div className="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4 dark:border-white/10">
-              {" "}
+          <div className="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none">
+            {/* Modal Header */}
+            <div className="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4">
               <h5
-                className="text-xl font-medium leading-normal text-surface dark:text-white"
+                className="text-xl font-medium leading-normal text-[var(--ink)]"
                 id="logoutModalLabel">
-                {" "}
-                Confirm Logout{" "}
-              </h5>{" "}
-              {/* Close Button */}{" "}
+                Confirm Logout
+              </h5>
+
+              {/* Close Button */}
               <button
                 type="button"
                 ref={closeButtonRef}
-                className="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 focus:outline-none dark:text-neutral-400"
+                className="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 focus:outline-none"
                 data-twe-modal-dismiss
                 aria-label="Close">
-                {" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -51,40 +51,38 @@ export default function Logout({ setLogin }) {
                   strokeWidth="1.5"
                   stroke="currentColor"
                   className="h-6 w-6">
-                  {" "}
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M6 18L18 6M6 6l12 12"
-                  />{" "}
-                </svg>{" "}
-              </button>{" "}
-            </div>{" "}
-            {/* Modal Message */}{" "}
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Message */}
             <div className="relative flex-auto p-4">
-              {" "}
-              Are you sure you want to logout?{" "}
-            </div>{" "}
-            {/* Modal Buttons */}{" "}
-            <div className="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 p-4 dark:border-white/10">
-              {" "}
-              {/* Cancel */}{" "}
+              Are you sure you want to logout?
+            </div>
+
+            {/* Modal Buttons */}
+            <div className="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 p-4">
+              {/* Cancel */}
               <button
                 type="button"
                 className="inline-block rounded bg-gray-200 px-6 py-2.5 text-xs font-medium uppercase text-gray-700 hover:bg-gray-300"
                 data-twe-modal-dismiss>
-                {" "}
-                Cancel{" "}
-              </button>{" "}
-              {/* Confirm */}{" "}
+                Cancel
+              </button>
+
+              {/* Confirm */}
               <button
                 type="button"
                 onClick={handleLogout}
                 className="ml-2 inline-block rounded bg-red-600 px-6 py-2.5 text-xs font-medium uppercase text-white hover:bg-red-700">
-                {" "}
-                Confirm{" "}
-              </button>{" "}
-            </div>{" "}
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       </div>

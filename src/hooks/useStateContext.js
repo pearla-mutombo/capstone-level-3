@@ -4,11 +4,16 @@ const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
 
 export function useStateContext(key) {
   const Contexts = window[STATE_CONTEXT_LIST];
-  const Context = Contexts.reduce(toClosestContext(key), null);
 
-  handleErrors(key, Context);
+  let closestContext = null;
+  for (let index = 0; index < Contexts.length; index++) {
+    const contextValue = useContext(Contexts[index]);
+    if (contextValue) closestContext = contextValue;
+  }
 
-  const { getValue, setValue, hasKey, subscribe, unsubscribe } = Context;
+  handleErrors(key, closestContext);
+
+  const { getValue, setValue, hasKey, subscribe, unsubscribe } = closestContext;
   const value = getValue(key);
 
   const [stateVersion, setStateVersion] = useState(1);
@@ -32,22 +37,14 @@ export function useStateContext(key) {
   }
 }
 
-function toClosestContext(key) {
-  return function (closestContext, Context) {
-    const contextValue = useContext(Context);
-    if (contextValue) closestContext = contextValue;
-    return closestContext;
-  };
-}
-
-function handleErrors(key, Context) {
+function handleErrors(key, context) {
   if (!key)
     throw new Error('A key is required. Example: useStateContext("username")');
-  if (!Context)
+  if (!context)
     throw new Error(
       "Invalid StateContext. Include this component in <StateContext> to give it access.",
     );
-  if (!Context.hasKey(key))
+  if (!context.hasKey(key))
     throw new Error(
       "Invalid key. Keys must be declared in initialState. Example: <StateContext initialState={state}>",
     );

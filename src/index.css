@@ -1,7 +1,16 @@
 /* NOVUS Market Main CSS file */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap");
+
+/* Design tokens for the NOVUS "spark" brand identity. */
+:root {
+  --ink: #0b1220;
+  --nova: #2436c9;
+  --nova-dark: #16205c;
+  --spark: #f5a623;
+  --surface: #fafaf8;
+}
 
 /* Make the page fill the screen. */
-
 html,
 body {
   margin: 0;
@@ -10,18 +19,24 @@ body {
   min-height: 100%;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
-  padding: 20px;
-  font-size: large;
+/* Use a distinctive but readable font pairing for the website. */
+body {
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  background-color: var(--surface);
+  color: var(--ink);
 }
 
-/* Use a simple font for the website. */
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f9fafb;
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Space Grotesk", Arial, sans-serif;
+}
+
+/* Used for prices, eyebrow labels, and category tags. */
+.font-mono-label {
+  font-family: "IBM Plex Mono", monospace;
+  letter-spacing: 0.05em;
 }
 
 /* Make images responsive. */

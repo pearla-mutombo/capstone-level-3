@@ -29,61 +29,17 @@
             "null"
           ]
         },
+        "category": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "reviews": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/reviews"
           }
-        }
-      }
-    },
-    "reviews": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer"
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "stars": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "user_id": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "product_id": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "products": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/products"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "users": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/users"
-            },
-            {
-              "type": "null"
-            }
-          ]
         }
       }
     },
@@ -164,15 +120,62 @@
           }
         }
       }
+    },
+    "reviews": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stars": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "product_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "products": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/products"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "users": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/users"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
     }
   },
   "type": "object",
   "properties": {
     "products": {
       "$ref": "#/definitions/products"
-    },
-    "reviews": {
-      "$ref": "#/definitions/reviews"
     },
     "students": {
       "$ref": "#/definitions/students"
@@ -182,6 +185,9 @@
     },
     "users": {
       "$ref": "#/definitions/users"
+    },
+    "reviews": {
+      "$ref": "#/definitions/reviews"
     }
   }
 }

@@ -1,26 +1,26 @@
 import { Fragment } from "react/jsx-runtime";
 import categories from "../data/categorySelectionData";
+import Spark from "./Spark.jsx";
 
 export default function () {
   return (
-    <section className="bg-white py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-blue-700 font-semibold uppercase tracking-wide">
-            Explore
+    <section id="categories" className="bg-white py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 text-center">
+          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase text-[var(--nova)]">
+            <Spark className="h-3 w-3" /> Explore
           </p>
-          <h2 className="text-4xl font-bold text-gray-900 mt-2">
+          <h2 className="mt-2 text-4xl font-bold text-gray-900">
             Shop by Category
           </h2>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+          <p className="mx-auto mt-4 max-w-2xl text-gray-600">
             Find exactly what you're looking for by exploring our collection of
             popular categories.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map(toCategory)}
-          <button></button>
         </div>
       </div>
     </section>
@@ -32,19 +32,20 @@ export default function () {
       <Fragment key={key}>
         <dd>
           <button
-            key={category.id}
+            key={key}
             type="button"
-            className="group text-left bg-gray-50 border border-gray-200 rounded-xl p-6 hover:bg-blue-50 hover:border-blue-300 transition-all">
-            <div className="text-4xl mb-4">{category.icon}</div>
+            className="group rounded-xl border border-gray-200 bg-gray-50 p-6 text-left transition-all hover:border-[var(--nova)] hover:bg-blue-50">
+            <div className="mb-4 text-4xl">{category.icon}</div>
 
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-700">
+            <h3 className="text-xl font-bold text-gray-900 group-hover:text-[var(--nova)]">
               {category.name}
             </h3>
 
-            <p className="text-gray-600 mt-2">{category.description}</p>
+            <p className="mt-2 text-gray-600">{category.description}</p>
           </button>
         </dd>
       </Fragment>
     );
+    return details;
   }
 }

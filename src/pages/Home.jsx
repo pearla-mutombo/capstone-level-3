@@ -1,17 +1,15 @@
 import Hero from "../components/Hero";
-import FeatureProducts from "../components/FeaturedProducts";
-import Categories from "../components/Categories";
+import FeaturedProducts from "../components/FeaturedProducts";
+import CategorySection from "../components/CategorySection";
 import Benefits from "../components/Benefits";
 
 export default function Home() {
   return (
-   
-      <main className="min-h-screen bg-gray-50">
-        <Hero />
-        <FeatureProducts />
-        <Categories />
-        <Benefits />
-      </main>
-  
+    <main className="min-h-screen bg-[var(--surface)]">
+      <Hero />
+      <FeaturedProducts />
+      <CategorySection />
+      <Benefits />
+    </main>
   );
 }

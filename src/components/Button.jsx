@@ -4,7 +4,7 @@ export default function Button({ children, onClick, type, disabled }) {
       type="button"
       onClick={handleButtonClick}
       disabled={disabled}
-      className="w-full bg-blue-700 text-white font-semibold py-3 px-5 rounded-lg hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+      className="w-full rounded-lg bg-[var(--nova)] px-5 py-3 font-semibold text-white transition-colors hover:bg-[var(--nova-dark)] disabled:cursor-not-allowed disabled:bg-gray-400">
       {children}
     </button>
   );
