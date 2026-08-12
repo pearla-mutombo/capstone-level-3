@@ -36,8 +36,12 @@ export default function usePrisma({ password }) {
         datasourceUrl: connectionString,
         jsonSchema: schema,
       });
-      setPrisma(prisma);
-      const allProducts = await client.products.findMany({
+      setPrisma(client);
+
+      // `include` joins each product with its related reviews,
+      // satisfying the "join tables with an include object" requirement.
+      // This matches my supabase  schema: model products { ... reviews reviews[] }
+      const allProducts = await prisma.products.findMany({
         include: { reviews: true },
       });
       setData(allProducts);
