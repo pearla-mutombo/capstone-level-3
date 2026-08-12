@@ -5,7 +5,9 @@ import Benefits from "../components/Benefits";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[var(--surface)]">
+    <main
+      className="min-h-screen"
+      style={{ backgroundColor: "var(--surface)" }}>
       <Hero />
       <FeaturedProducts />
       <CategorySection />
