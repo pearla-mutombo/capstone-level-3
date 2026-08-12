@@ -22,14 +22,14 @@ export default function Navbar() {
   const cartCount = cartItems?.length || 0;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-[var(--ink)]/95 shadow-lg backdrop-blur">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-(--ink)/95 shadow-lg backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-20 items-center justify-between">
           {/* NOVUS Market Logo */}
           <NavLink
             to="/"
             onClick={closeMobileMenu}
-            className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white transition hover:text-[var(--spark)]">
+            className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white transition hover:text-(--spark)">
             <Spark className="h-5 w-5" />
             <span>NOVUS Market</span>
           </NavLink>
@@ -58,7 +58,7 @@ export default function Navbar() {
                 className={getCartLinkClass}>
                 Cart
                 {cartCount > 0 && (
-                  <span className="absolute -right-4 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--spark)] px-1 text-xs font-bold text-[var(--ink)]">
+                  <span className="absolute -right-4 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-(--spark) px-1 text-xs font-bold text-(--ink)">
                     {cartCount}
                   </span>
                 )}
@@ -98,7 +98,7 @@ export default function Navbar() {
                 <NavLink
                   to="/login"
                   onClick={closeMobileMenu}
-                  className="rounded-lg bg-[var(--spark)] px-5 py-2.5 font-semibold text-[var(--ink)] shadow-md transition hover:brightness-95">
+                  className="rounded-lg bg-(--spark) px-5 py-2.5 font-semibold text-(--ink) shadow-md transition hover:brightness-95">
                   Login
                 </NavLink>
               )}
@@ -151,7 +151,7 @@ export default function Navbar() {
                 <span>Cart</span>
 
                 {cartCount > 0 && (
-                  <span className="rounded-full bg-[var(--spark)] px-2 py-1 text-xs font-bold text-[var(--ink)]">
+                  <span className="rounded-full bg-(--spark) px-2 py-1 text-xs font-bold text-(--ink)">
                     {cartCount}
                   </span>
                 )}
@@ -196,7 +196,7 @@ export default function Navbar() {
                 <NavLink
                   to="/login"
                   onClick={closeMobileMenu}
-                  className="mx-3 mt-2 rounded-lg bg-[var(--spark)] px-5 py-2.5 text-center font-semibold text-[var(--ink)] shadow-md transition hover:brightness-95">
+                  className="mx-3 mt-2 rounded-lg bg-(--spark) px-5 py-2.5 text-center font-semibold text-(--ink) shadow-md transition hover:brightness-95">
                   Login
                 </NavLink>
               </>

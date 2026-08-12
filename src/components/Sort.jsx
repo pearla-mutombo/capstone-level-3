@@ -16,7 +16,7 @@ export default function Sort({ setSortBy }) {
         <label className="flex items-center gap-2 hover:cursor-pointer">
           <input
             onChange={handleSort}
-            className="h-4 w-4 accent-[var(--nova)]"
+            className="h-4 w-4 accent-(--nova)"
             type="radio"
             name="sort"
             id="sortByName"
@@ -28,7 +28,7 @@ export default function Sort({ setSortBy }) {
         <label className="flex items-center gap-2 hover:cursor-pointer">
           <input
             onChange={handleSort}
-            className="h-4 w-4 accent-[var(--nova)]"
+            className="h-4 w-4 accent-(--nova)"
             type="radio"
             name="sort"
             id="sortByPrice"

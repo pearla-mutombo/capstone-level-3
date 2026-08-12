@@ -31,10 +31,7 @@ export default function Login() {
       return;
     }
 
-    if (
-      email === "customer@novusmarket.com" &&
-      password === "novus123"
-    ) {
+    if (email === "customer@novusmarket.com" && password === "novus123") {
       setLogin({ email, password });
       navigate("/dashboard");
     } else {
@@ -45,13 +42,10 @@ export default function Login() {
   return (
     <main
       className="flex min-h-screen items-center justify-center px-4 py-12"
-      style={{ backgroundColor: "var(--surface)" }}
-    >
+      style={{ backgroundColor: "var(--surface)" }}>
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome Back
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
 
           <p className="mt-2 text-gray-600">
             Login to your NOVUS Market account.
@@ -68,8 +62,7 @@ export default function Login() {
           <div className="mb-5">
             <label
               htmlFor="email"
-              className="mb-2 block font-medium text-gray-700"
-            >
+              className="mb-2 block font-medium text-gray-700">
               Email
             </label>
 
@@ -86,8 +79,7 @@ export default function Login() {
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="mb-2 block font-medium text-gray-700"
-            >
+              className="mb-2 block font-medium text-gray-700">
               Password
             </label>
 
@@ -109,8 +101,7 @@ export default function Login() {
           <NavLink
             to="/register"
             className="font-semibold hover:underline"
-            style={{ color: "var(--nova)" }}
-          >
+            style={{ color: "var(--nova)" }}>
             Register
           </NavLink>
         </p>

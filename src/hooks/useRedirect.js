@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
-export default function useRedirect( url, milliseconds) {
-
+export default function useRedirect(url, milliseconds) {
   const navigateTo = useNavigate();
   const [timerId, setTimerId] = useState();
 
@@ -21,5 +20,4 @@ export default function useRedirect( url, milliseconds) {
       setTimerId(id);
     }
   }
-
 }

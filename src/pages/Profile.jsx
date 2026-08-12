@@ -6,7 +6,7 @@ export default function Profile() {
   const isLoggedIn = login.email !== "";
 
   return (
-    <main className="min-h-screen bg-[var(--surface)] py-12">
+    <main className="min-h-screen bg-(--surface) py-12">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {isLoggedIn ? (
           <div className="rounded-xl bg-white p-10 shadow-md">
@@ -28,7 +28,7 @@ export default function Profile() {
             </h1>
             <NavLink
               to="/login"
-              className="inline-block rounded-lg bg-[var(--nova)] px-6 py-3 font-semibold text-white transition hover:bg-[var(--nova-dark)]">
+              className="inline-block rounded-lg bg-(--nova) px-6 py-3 font-semibold text-white transition hover:bg-(--nova-dark)">
               Go to Login
             </NavLink>
           </div>

@@ -11,14 +11,14 @@ export default function ProductCard({ product, handleAddToCart }) {
           {category}
         </p>
         <h3 className="mb-2 text-xl font-semibold text-gray-900">{name}</h3>
-        <p className="font-mono-label mb-4 text-2xl font-bold text-[var(--nova)]">
+        <p className="font-mono-label mb-4 text-2xl font-bold text-(--nova)">
           ${price}
         </p>
 
         <button
           onClick={() => handleAddToCart({ id, name, price, image, category })}
           type="button"
-          className="w-full rounded-lg bg-[var(--nova)] py-2.5 font-semibold text-white transition hover:bg-[var(--nova-dark)]">
+          className="w-full rounded-lg bg-(--nova) py-2.5 font-semibold text-white transition hover:bg-(--nova-dark)">
           Add to Cart
         </button>
       </div>

@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 // account creation becomes a requirement.
 export default function Register() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--surface)] px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-(--surface) px-4 py-12">
       <div className="w-full max-w-md rounded-xl bg-white p-8 text-center shadow-lg">
         <h1 className="mb-4 text-3xl font-bold text-gray-900">
           Registration Coming Soon
@@ -16,7 +16,7 @@ export default function Register() {
         </p>
         <NavLink
           to="/login"
-          className="inline-block rounded-lg bg-[var(--nova)] px-6 py-3 font-semibold text-white transition hover:bg-[var(--nova-dark)]">
+          className="inline-block rounded-lg bg-(--nova) px-6 py-3 font-semibold text-white transition hover:bg-(--nova-dark)">
           Go to Login
         </NavLink>
       </div>

@@ -25,7 +25,7 @@ export default function FeaturedProducts() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-16">
-      <p className="font-mono-label flex items-center justify-center gap-2 text-center text-sm uppercase text-[var(--nova)]">
+      <p className="font-mono-label flex items-center justify-center gap-2 text-center text-sm uppercase `text-(--nova)`">
         <Spark className="h-3 w-3" /> Featured
       </p>
       <h2 className="mb-10 mt-2 text-center text-4xl font-bold">
@@ -68,12 +68,12 @@ export default function FeaturedProducts() {
             alt={product.name}
           />
           <h3 className="mb-2 text-xl font-semibold">{product.name}</h3>
-          <p className="font-mono-label mb-4 text-lg font-bold text-[var(--nova)]">
+          <p className="font-mono-label mb-4 text-lg font-bold `text-(--nova)`">
             ${product.price}
           </p>
           <button
             onClick={() => handleAddToCart(product)}
-            className="w-full rounded-lg bg-[var(--nova)] py-2 text-white transition hover:bg-[var(--nova-dark)]">
+            className="w-full rounded-lg bg-(--nova) py-2 text-white transition hover:bg-(--nova-dark)">
             Add to Cart
           </button>
         </article>

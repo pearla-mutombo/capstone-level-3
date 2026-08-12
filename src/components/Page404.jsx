@@ -11,7 +11,7 @@ export default function Page404() {
   const handleRedirect = useRedirect("/", 25000);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--surface)] p-6">
+    <main className="flex min-h-screen items-center justify-center bg-(--surface) p-6">
       <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
         {/* 404 Image */}
         <div className="relative">
@@ -23,10 +23,10 @@ export default function Page404() {
         </div>
 
         {/* 404 Message */}
-        <div className="flex flex-col items-center p-8 text-center text-[var(--ink)]">
+        <div className="flex flex-col items-center p-8 text-center text-(--ink)">
           <Spark className="mb-3 h-8 w-8 animate-pulse" />
 
-          <h1 className="mb-3 text-7xl font-extrabold tracking-tight text-[var(--nova)]">
+          <h1 className="mb-3 text-7xl font-extrabold tracking-tight text-(--nova)">
             404
           </h1>
           <h2 className="mb-3 text-3xl font-bold tracking-wide">
@@ -41,7 +41,7 @@ export default function Page404() {
           <button
             type="button"
             onClick={handleRedirect}
-            className="w-full max-w-xs rounded-lg bg-[var(--nova)] px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-white shadow-md transition duration-150 ease-in-out hover:bg-[var(--nova-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--nova)]"
+            className="w-full max-w-xs rounded-lg bg-(--nova) px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-white shadow-md transition duration-150 ease-in-out hover:bg-(--nova-dark) focus:outline-none focus:ring-2 focus:ring-(--nova)"
             data-twe-ripple-init
             data-twe-ripple-color="light">
             Navigate to Home Page

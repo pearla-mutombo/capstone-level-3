@@ -7,7 +7,7 @@ export default function Benefits() {
     <section className="bg-gray-100 py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
-          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase text-[var(--nova)]">
+          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase `text-[var(--nova)`]">
             <Spark className="h-3 w-3" /> NOVUS Difference
           </p>
 

@@ -17,28 +17,28 @@ export default function () {
     const updatedCart = [];
     let productAlreadyInCart = false;
     for (let index = 0; index < cartItems.length; index++) {
-        const item = cartItems[index];
-        if (item.id === novusProduct.id) {
-            const updatedItem = {
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity + 1
-            };
-            updatedCart.push(updatedItem);
-            productAlreadyInCart = true;
-        } else {
-            updatedCart.push(item);
-        }  
+      const item = cartItems[index];
+      if (item.id === novusProduct.id) {
+        const updatedItem = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity + 1,
+        };
+        updatedCart.push(updatedItem);
+        productAlreadyInCart = true;
+      } else {
+        updatedCart.push(item);
+      }
     }
     if (!productAlreadyInCart) {
-        const newItem = {
-            id: product.id,
-            name: product.title || product.name,
-            price: product.price,
-            quantity: 1
-        };
-        updatedCart.push(newItem);
+      const newItem = {
+        id: product.id,
+        name: product.title || product.name,
+        price: product.price,
+        quantity: 1,
+      };
+      updatedCart.push(newItem);
     }
     setCartItems(updatedCart);
   }
@@ -47,10 +47,10 @@ export default function () {
   function handleRemoveItem(novusProductId) {
     const updatedCart = [];
     for (let index = 0; index < cartItems.length; index++) {
-        const item = cartItems[index];
-        if (item.id !== productId) {
-            updatedCart.push(item);
-        }  
+      const item = cartItems[index];
+      if (item.id !== productId) {
+        updatedCart.push(item);
+      }
     }
     setCartItems(updatedCart);
   }
@@ -59,16 +59,16 @@ export default function () {
   function handleIncreaseQuantity(productId) {
     const updatedCart = [];
     for (let index = 0; index < cartItems.length; index++) {
-        const item = cartItems[index];
-        if (item.id === productId) {
-            const updatedItem = {
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity + 1
-            };
-            updatedCart.push(updatedItem);
-        }
+      const item = cartItems[index];
+      if (item.id === productId) {
+        const updatedItem = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity + 1,
+        };
+        updatedCart.push(updatedItem);
+      }
     }
     setCartItems(updatedCart);
   }
@@ -77,18 +77,18 @@ export default function () {
   function handleDecreaseQuantity(novusProductId) {
     const updatedCart = [];
     for (let index = 0; index < cartItems.length; index++) {
-        const item = cartItems[index];
-        if (item.id === novusProduct.id && item.quantity > 1) {
-            const updatedItem = {
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity - 1
-            };
-            updatedCart.push(updatedItem);
-        } else {
-            updatedCart.push(item);
-        } 
+      const item = cartItems[index];
+      if (item.id === novusProduct.id && item.quantity > 1) {
+        const updatedItem = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity - 1,
+        };
+        updatedCart.push(updatedItem);
+      } else {
+        updatedCart.push(item);
+      }
     }
     setCartItems(updatedCart);
   }
@@ -97,9 +97,9 @@ export default function () {
   function calculateTotal() {
     let total = 0;
     for (let index = 0; index < cartItems.length; index++) {
-        const element = cartItems[index];
-        const itemTotal = item.price * item.quantity;
-        total = total + itemTotal;
+      const element = cartItems[index];
+      const itemTotal = item.price * item.quantity;
+      total = total + itemTotal;
     }
     return total;
   }

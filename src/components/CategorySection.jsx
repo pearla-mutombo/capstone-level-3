@@ -7,7 +7,7 @@ export default function () {
     <section id="categories" className="bg-white py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
-          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase text-[var(--nova)]">
+          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase `text-(--nova)`">
             <Spark className="h-3 w-3" /> Explore
           </p>
           <h2 className="mt-2 text-4xl font-bold text-gray-900">
@@ -34,10 +34,10 @@ export default function () {
           <button
             key={key}
             type="button"
-            className="group rounded-xl border border-gray-200 bg-gray-50 p-6 text-left transition-all hover:border-[var(--nova)] hover:bg-blue-50">
+            className="group rounded-xl border border-gray-200 bg-gray-50 p-6 text-left transition-all `hover:border-(--nova)` hover:bg-blue-50">
             <div className="mb-4 text-4xl">{category.icon}</div>
 
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-[var(--nova)]">
+            <h3 className="text-xl font-bold text-gray-900 `group-hover:text-(--nova)`">
               {category.name}
             </h3>
 

@@ -60,7 +60,7 @@ export default function Products() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--surface)] py-12">
+    <main className="min-h-screen bg-(--surface) py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold text-gray-900">NOVUS Products</h1>
@@ -80,7 +80,7 @@ export default function Products() {
                 value={search}
                 onChange={handleSearchChange}
                 placeholder="Search by product name..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--nova)]"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-(--nova)"
               />
             </div>
 
@@ -92,7 +92,7 @@ export default function Products() {
                 id="category"
                 value={category}
                 onChange={handleCategoryChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--nova)]">
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-(--nova)">
                 <option value="All">All Categories</option>
                 <option value="Electronics">Electronics</option>
                 <option value="Clothing">Clothing</option>
@@ -110,7 +110,7 @@ export default function Products() {
                 id="sort"
                 value={sortOption}
                 onChange={handleSortChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--nova)]">
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-(--nova)">
                 <option value="name">Name A-Z</option>
                 <option value="priceLow">Price Low to High</option>
                 <option value="priceHigh">Price High to Low</option>

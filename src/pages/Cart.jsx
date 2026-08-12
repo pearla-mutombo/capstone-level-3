@@ -6,7 +6,7 @@ export default function Cart() {
   const [cartItems, setCartItems] = useStateContext("cartItems");
 
   return (
-    <main className="min-h-screen bg-[var(--surface)] py-12">
+    <main className="min-h-screen bg-(--surface) py-12">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-8 text-4xl font-bold text-gray-900">
           Your Shopping Cart
@@ -29,7 +29,7 @@ export default function Cart() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-semibold">{item.name}</h2>
-                      <p className="font-mono-label mt-2 font-bold text-[var(--nova)]">
+                      <p className="font-mono-label mt-2 font-bold text-(--nova)">
                         ${item.price}
                       </p>
                     </div>
