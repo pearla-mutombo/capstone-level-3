@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createWebClient } from "../../prisma-template/web-client.js";
 import schema from "../../json-schema.json";
 
-export default function usePrisma(password) {
+export default function usePrisma({ password }) {
   const [prisma, setPrisma] = useState();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,16 +32,12 @@ export default function usePrisma(password) {
       setErrorMessage("");
 
       const connectionString = `postgresql://postgres.vyaeweixpmstshejlmzs:${password}@aws-1-us-east-2.pooler.supabase.com:5432/postgres`;
-      const client = await createWebClient({
+      const prisma = await createWebClient({
         datasourceUrl: connectionString,
         jsonSchema: schema,
       });
-      setPrisma(client);
-
-      // `include` joins each product with its related reviews,
-      // satisfying the "join tables with an include object" requirement.
-      // This matches my supabase  schema: model products { ... reviews reviews[] }
-      const allProducts = await client.products.findMany({
+      setPrisma(prisma);
+      const allProducts = await prisma.products.findMany({
         include: { reviews: true },
       });
       setData(allProducts);

@@ -23,7 +23,7 @@ export default function Products() {
   const sortedProducts = useSort(categoryResults, sortOption);
 
   function matchesCategory(product) {
-    return category === "All" || product.category === category;
+    return category === "All" || products.category === category;
   }
 
   function handleSearchChange(event) {
@@ -46,18 +46,19 @@ export default function Products() {
       if (existing) {
         return previousItems.map(incrementIfMatch);
       }
-      return [...previousItems, { ...product, quantity: 1 }];
+      return [...previousItems, { ...products, quantity: 1 }];
 
       function matchesId(item) {
-        return item.id === product.id;
+        return item.id === products.id;
       }
       function incrementIfMatch(item) {
-        return item.id === product.id
+        return item.id === products.id
           ? { ...item, quantity: item.quantity + 1 }
           : item;
       }
     }
   }
+
 
   return (
     <main className="min-h-screen bg-(--surface) py-12">
@@ -99,6 +100,7 @@ export default function Products() {
                 <option value="Home">Home</option>
                 <option value="Gaming">Gaming</option>
                 <option value="Books">Books</option>
+                <option value="Yoga">Yoga</option>
               </select>
             </div>
 
@@ -137,10 +139,10 @@ export default function Products() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {sortedProducts.map((product) => (
+            {sortedProducts.map((products) => (
               <ProductCard
-                key={product.id}
-                product={product}
+                key={products.id}
+                product={products}
                 handleAddToCart={handleAddToCart}
               />
             ))}
