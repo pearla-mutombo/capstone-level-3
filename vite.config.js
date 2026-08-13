@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-import { repoRoot } from "./public/repoRoot";
+import { repoRoot } from "./config/repoRoot";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],

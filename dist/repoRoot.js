@@ -1,1 +1,0 @@
-export const repoRoot = "/react-deploy/";
