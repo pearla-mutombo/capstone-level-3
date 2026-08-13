@@ -17,20 +17,26 @@ export default function ProductCard({ product, handleAddToCart }) {
         </p>
 
         <button
-          onClick={() =>
-            handleAddToCart({
-              id,
-              name,
-              price,
-              src,
-              category,
-            })
-          }
           type="button"
+          onClick={handleAddButtonClick}
           className="w-full rounded-lg bg-(--nova) py-2.5 font-semibold text-white transition hover:bg-(--nova-dark)">
           Add to Cart
         </button>
       </div>
     </article>
   );
+
+  function handleAddButtonClick() {
+    handleAddToCart({
+      id,
+      name,
+      price,
+      src,
+      category,
+    });
+  }
 }
+// Note: contains reusable React component and matahed filename;
+// props <productCard product={product} handleAddToCart={handleAddToCart}/>
+// Destructing directly in parameters function ProductCard({ product, handleAddToCart })
+// even handler onClick={handleAddButtonClick}

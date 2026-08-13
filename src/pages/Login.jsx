@@ -7,6 +7,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Get the setter for our shared login state.
   const [, setLogin] = useStateContext("login");
@@ -23,7 +24,7 @@ export default function Login() {
     setLoginError("");
   }
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault();
 
     if (email === "" || password === "") {
@@ -31,11 +32,41 @@ export default function Login() {
       return;
     }
 
-    if (email === "customer@novusmarket.com" && password === "novus123") {
-      setLogin({ email, password });
+    setIsLoggingIn(true);
+    setLoginError("");
+
+    try {
+      const response = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setLoginError(data.error || "Invalid email or password.");
+        return;
+      }
+
+      // Save the logged-in user in shared state.
+      setLogin({
+        id: data.id,
+        email: data.email,
+      });
+
+      // Send the user to the dashboard.
       navigate("/dashboard");
-    } else {
-      setLoginError("Invalid email or password.");
+    } catch (error) {
+      console.error("Login request error:", error);
+      setLoginError("Unable to connect to the server. Please try again.");
+    } finally {
+      setIsLoggingIn(false);
     }
   }
 
@@ -93,7 +124,9 @@ export default function Login() {
             />
           </div>
 
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={isLoggingIn}>
+            {isLoggingIn ? "Logging in..." : "Login"}
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-gray-600">

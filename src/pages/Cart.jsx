@@ -2,47 +2,132 @@ import Button from "../components/Button";
 import { useStateContext } from "../hooks/useStateContext";
 
 export default function Cart() {
-  // Read the real shared cart, not a disconnected local copy.
+  // Get the shared cart and its setter from StateContext.
   const [cartItems, setCartItems] = useStateContext("cartItems");
 
+  // Remove one product completely from the cart.
+  function handleRemoveItem(productId) {
+    const updatedCart = cartItems.filter(matchesProduct);
+
+    setCartItems(updatedCart);
+
+    function matchesProduct(item) {
+      return item.id !== productId;
+    }
+  }
+
+  // Increase the quantity of a product.
+  function handleIncreaseQuantity(productId) {
+    const updatedCart = cartItems.map(increaseQuantity);
+
+    setCartItems(updatedCart);
+
+    function increaseQuantity(item) {
+      if (item.id === productId) {
+        return {
+          ...item,
+          quantity: item.quantity + 1,
+        };
+      }
+
+      return item;
+    }
+  }
+
+  // Decrease the quantity of a product.
+  function handleDecreaseQuantity(productId) {
+    const updatedCart = cartItems.map(decreaseQuantity);
+
+    setCartItems(updatedCart);
+
+    function decreaseQuantity(item) {
+      if (item.id === productId && item.quantity > 1) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        };
+      }
+
+      return item;
+    }
+  }
+
+  // Calculate the total price of all products in the cart.
+  function calculateTotal() {
+    let total = 0;
+
+    for (let index = 0; index < cartItems.length; index++) {
+      const item = cartItems[index];
+      total = total + Number(item.price) * item.quantity;
+    }
+
+    return total;
+  }
+
+  // Show a simple message when checkout is clicked.
+  function handleCheckout() {
+    alert("Checkout coming soon!");
+  }
+
   return (
-    <main className="min-h-screen bg-(--surface) py-12">
+    <main
+      className="min-h-screen py-12"
+      style={{ backgroundColor: "var(--surface)" }}>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-8 text-4xl font-bold text-gray-900">
           Your Shopping Cart
         </h1>
 
+        {/* Conditional rendering: show an empty-cart message or the cart. */}
         {cartItems.length === 0 ? (
           <div className="rounded-xl bg-white p-10 text-center shadow-md">
             <h2 className="mb-4 text-2xl font-semibold">Your cart is empty</h2>
+
             <p className="text-gray-600">
               Add some products to your cart to get started.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            {/* Cart Items */}
             <div className="space-y-4 lg:col-span-2">
               {cartItems.map((item) => (
-                <div
+                <article
                   key={item.id}
                   className="rounded-xl bg-white p-6 shadow-md">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold">{item.name}</h2>
-                      <p className="font-mono-label mt-2 font-bold text-(--nova)">
-                        ${item.price}
-                      </p>
+                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                    {/* Product Information */}
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={item.image || item.src}
+                        alt={item.name}
+                        className="h-24 w-24 rounded-lg object-cover"
+                      />
+
+                      <div>
+                        <h2 className="text-xl font-semibold text-gray-900">
+                          {item.name}
+                        </h2>
+
+                        <p className="mt-2 font-bold text-(--nova)">
+                          ${Number(item.price).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
 
+                    {/* Remove Button */}
                     <button
+                      type="button"
                       onClick={() => handleRemoveItem(item.id)}
                       className="font-medium text-red-600 hover:text-red-800">
                       Remove
                     </button>
                   </div>
 
+                  {/* Quantity Controls */}
                   <div className="mt-5 flex items-center gap-4">
                     <button
+                      type="button"
                       onClick={() => handleDecreaseQuantity(item.id)}
                       className="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300">
                       -
@@ -51,16 +136,18 @@ export default function Cart() {
                     <span className="font-semibold">{item.quantity}</span>
 
                     <button
+                      type="button"
                       onClick={() => handleIncreaseQuantity(item.id)}
                       className="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300">
                       +
                     </button>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
 
-            <div className="h-fit rounded-xl bg-white p-6 shadow-md">
+            {/* Order Summary */}
+            <aside className="h-fit rounded-xl bg-white p-6 shadow-md">
               <h2 className="mb-6 text-2xl font-bold">Order Summary</h2>
 
               <div className="mb-4 flex justify-between">
@@ -70,70 +157,17 @@ export default function Cart() {
 
               <div className="flex justify-between border-t pt-4 text-xl font-bold">
                 <span>Total</span>
-                <span className="font-mono-label">
-                  ${calculateTotal().toFixed(2)}
-                </span>
+
+                <span>${calculateTotal().toFixed(2)}</span>
               </div>
 
               <div className="mt-6">
-                <Button onClick={() => alert("Checkout coming soon!")}>
-                  Checkout
-                </Button>
+                <Button onClick={handleCheckout}>Checkout</Button>
               </div>
-            </div>
+            </aside>
           </div>
         )}
       </div>
     </main>
   );
-
-  // Removes a product from the cart.
-  function handleRemoveItem(productId) {
-    const updatedCart = [];
-    for (let index = 0; index < cartItems.length; index++) {
-      const item = cartItems[index];
-      if (item.id !== productId) {
-        updatedCart.push(item);
-      }
-    }
-    setCartItems(updatedCart);
-  }
-
-  // Increase the quantity of an item.
-  function handleIncreaseQuantity(productId) {
-    const updatedCart = [];
-    for (let index = 0; index < cartItems.length; index++) {
-      const item = cartItems[index];
-      if (item.id === productId) {
-        updatedCart.push({ ...item, quantity: item.quantity + 1 });
-      } else {
-        updatedCart.push(item);
-      }
-    }
-    setCartItems(updatedCart);
-  }
-
-  // Decrease the quantity of an item.
-  function handleDecreaseQuantity(productId) {
-    const updatedCart = [];
-    for (let index = 0; index < cartItems.length; index++) {
-      const item = cartItems[index];
-      if (item.id === productId && item.quantity > 1) {
-        updatedCart.push({ ...item, quantity: item.quantity - 1 });
-      } else {
-        updatedCart.push(item);
-      }
-    }
-    setCartItems(updatedCart);
-  }
-
-  // Calculate the total price of everything in the cart.
-  function calculateTotal() {
-    let total = 0;
-    for (let index = 0; index < cartItems.length; index++) {
-      const item = cartItems[index];
-      total = total + item.price * item.quantity;
-    }
-    return total;
-  }
 }

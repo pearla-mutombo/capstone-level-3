@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+
 import Page404 from "./components/Page404";
 import { RedirectGitHub404 } from "./components/RedirectGitHub404";
 
@@ -18,9 +19,7 @@ import { repoRoot } from "../config/repoRoot.js";
 
 import "./App.css";
 
-// This is the starting shared state for NOVUS Market. StateContext
-// requires this to be passed in as Map, with one entry per shared
-// state key.
+// Starting shared state for NOVUS Market
 const initialState = new Map([
   ["login", { email: "", password: "" }],
   ["cartItems", []],
@@ -36,13 +35,20 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+
           <Route path="/products" element={<Products />} />
+
           <Route path="/cart" element={<Cart />} />
+
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/register" element={<Register/>} />
-          <Route path="/login" element={<Login/>}/>
+
+          <Route path="/register" element={<Register />} />
+
+          <Route path="/dashboard" element={<Dashboard />} />
+
+          <Route path="/profile" element={<Profile />} />
+
+          {/* Show the custom 404 page to unknown routes. */}
           <Route path="*" element={<Page404 />} />
         </Routes>
 

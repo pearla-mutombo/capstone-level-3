@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import useModalTWE from "../hooks/useModalTWE";
 import { useStateContext } from "../hooks/useStateContext";
 
@@ -6,23 +7,9 @@ export default function Logout() {
   useModalTWE();
 
   const [, setLogin] = useStateContext("login");
+  const navigate = useNavigate();
 
   const closeButtonRef = useRef(null);
-
-  function handleLogout() {
-    // Close the modal
-    if (closeButtonRef.current) {
-      closeButtonRef.current.click();
-    }
-
-    // Clear the login information
-    const emptyCredentials = {
-      email: "",
-      password: "",
-    };
-
-    setLogin(emptyCredentials);
-  }
 
   return (
     <>
@@ -103,4 +90,19 @@ export default function Logout() {
       </div>
     </>
   );
+
+  function handleLogout() {
+    if (closeButtonRef.current) {
+      closeButtonRef.current.click();
+    }
+
+    const emptyCredentials = {
+      email: "",
+      password: "",
+    };
+
+    setLogin(emptyCredentials);
+
+    navigate("/login");
+  }
 }
