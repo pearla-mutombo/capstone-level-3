@@ -11,27 +11,6 @@ export default function Logout() {
 
   const closeButtonRef = useRef(null);
 
-  function handleLogout() {
-    if (closeButtonRef.current) {
-      closeButtonRef.current.click();
-    }
-
-    const emptyCredentials = {
-      email: "",
-      password: "",
-    };
-
-    if (typeof setLogin === "function") {
-      setLogin(emptyCredentials);
-    } else {
-      console.error(
-        "setLogin is not available — check useStateContext('login')",
-      );
-    }
-
-    navigate("/login");
-  }
-
   return (
     <>
       {/* Logout Button */}
@@ -111,4 +90,17 @@ export default function Logout() {
       </div>
     </>
   );
+
+  function handleLogout() {
+    closeButtonRef.current.click();
+
+    const data = {
+      email: "",
+      password: "",
+    };
+
+    setLogin(data);
+
+    navigate("/login");
+  }
 }
