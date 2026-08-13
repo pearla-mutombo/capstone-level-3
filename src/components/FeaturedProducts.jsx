@@ -1,11 +1,10 @@
 import { Fragment } from "react/jsx-runtime";
-import usePrisma from "../hooks/usePrisma";
+import useProducts from "../hooks/useProducts";
 import { useStateContext } from "../hooks/useStateContext";
 import Spark from "./Spark";
 
 export default function FeaturedProducts() {
-  const dbPassword = import.meta.env.VITE_DB_PASSWORD;
-  const [, allProducts, isLoading, errorMessage] = usePrisma(dbPassword);
+  const [allProducts, isLoading, errorMessage] = useProducts();
   const [, setCartItems] = useStateContext("cartItems");
 
   // Feature the first four products from the real database.
@@ -25,7 +24,7 @@ export default function FeaturedProducts() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-16">
-      <p className="font-mono-label flex items-center justify-center gap-2 text-center text-sm uppercase `text-(--nova)`">
+      <p className="font-mono-label flex items-center justify-center gap-2 text-center text-sm uppercase text-(--nova)">
         <Spark className="h-3 w-3" /> Featured
       </p>
       <h2 className="mb-10 mt-2 text-center text-4xl font-bold">
@@ -68,7 +67,7 @@ export default function FeaturedProducts() {
             alt={product.name}
           />
           <h3 className="mb-2 text-xl font-semibold">{product.name}</h3>
-          <p className="font-mono-label mb-4 text-lg font-bold `text-(--nova)`">
+          <p className="font-mono-label mb-4 text-lg font-bold text-(--nova)">
             ${product.price}
           </p>
           <button

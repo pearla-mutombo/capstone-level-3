@@ -1,18 +1,30 @@
 import { Fragment } from "react/jsx-runtime";
+import { useNavigate } from "react-router-dom";
 import categories from "../data/categorySelectionData";
 import Spark from "./Spark.jsx";
 
-export default function () {
+export default function CategorySelection() {
+  const navigate = useNavigate();
+
+  // this function send the customer to the products category
+  // of their choice in the products page
+  function handleCategoryClick(category) {
+    navigate(`/products?category=${encodeURIComponent(category.name)}`);
+  }
+
   return (
     <section id="categories" className="bg-white py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
-          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase `text-(--nova)`">
-            <Spark className="h-3 w-3" /> Explore
+          <p className="font-mono-label flex items-center justify-center gap-2 text-sm uppercase text-(--nova)">
+            <Spark className="h-3 w-3" />
+            Explore
           </p>
+
           <h2 className="mt-2 text-4xl font-bold text-gray-900">
             Shop by Category
           </h2>
+
           <p className="mx-auto mt-4 max-w-2xl text-gray-600">
             Find exactly what you're looking for by exploring our collection of
             popular categories.
@@ -32,12 +44,12 @@ export default function () {
       <Fragment key={key}>
         <dd>
           <button
-            key={key}
             type="button"
-            className="group rounded-xl border border-gray-200 bg-gray-50 p-6 text-left transition-all `hover:border-(--nova)` hover:bg-blue-50">
+            onClick={() => handleCategoryClick(category)} // added a onClick
+            className="group w-full rounded-xl border border-gray-200 bg-gray-50 p-6 text-left transition-all hover:border-(--nova) hover:bg-blue-50">
             <div className="mb-4 text-4xl">{category.icon}</div>
 
-            <h3 className="text-xl font-bold text-gray-900 `group-hover:text-(--nova)`">
+            <h3 className="text-xl font-bold text-gray-900 group-hover:text-(--nova)">
               {category.name}
             </h3>
 

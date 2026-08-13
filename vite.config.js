@@ -8,4 +8,10 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
 
   base: repoRoot,
+
+  server: {
+    proxy: {
+      "/api": "http://localhost:3001",
+    },
+  },
 });

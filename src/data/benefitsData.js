@@ -21,7 +21,7 @@ export const benefits = [
     id: 4,
     icon: "💬",
     title: "Customer Support",
-    description: "We're here to help whenever you need us.",
+    description: "We're here to help whenever you need us. Contact our customer support at (404) 624-6335 .",
   },
 ];
 

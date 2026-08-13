@@ -25,7 +25,9 @@
   "homepage": "https://github.com/pearla-mutombo/capstone-level-3#readme",
   "dependencies": {
     "@prisma/client": "6.19.3",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "prisma": "^6.19.3",
     "prisma-json-schema-generator": "^5.1.5",
     "react": "^19.2.8",
