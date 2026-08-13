@@ -3,14 +3,14 @@ import useRedirect from "../hooks/useRedirect";
 import pic1 from "../assets/404_pic.jpg";
 import Spark from "./Spark";
 
-import { repoRoot } from "../../public/repoRoot";
+import { repoRoot } from "../../config/repoRoot";
 
 export default function Page404() {
   // Set up the TW Elements ripple effect.
   useRippleTWE();
 
   // Redirect the user to the home page.
-  const handleRedirect = useRedirect(repoRoot, 5000);
+  const handleRedirect = useRedirect("/", 5000);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-(--surface) p-6">
@@ -22,6 +22,9 @@ export default function Page404() {
             alt="Page not found"
             className="h-64 w-full object-cover"
           />
+          <a href="#!">
+            <div className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-[hsla(0,0%,98%,0.15)] bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100"></div>
+          </a>
         </div>
 
         {/* 404 Message */}
