@@ -5,6 +5,8 @@ import { useStateContext } from "../hooks/useStateContext";
 import Logout from "./Logout";
 import Spark from "./Spark";
 
+import { repoRoot } from "../../public/repoRoot";
+
 export default function Navbar() {
   // Get the login information from shared state.
   const [login] = useStateContext("login");
@@ -27,7 +29,7 @@ export default function Navbar() {
         <div className="flex min-h-20 items-center justify-between">
           {/* NOVUS Market Logo */}
           <NavLink
-            to="/"
+            to={repoRoot}
             onClick={closeMobileMenu}
             className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white transition hover:text-(--spark)">
             <Spark className="h-5 w-5" />
@@ -39,21 +41,21 @@ export default function Navbar() {
             <div className="flex items-center gap-7">
               {/* Home */}
               <NavLink
-                to="/"
+                to={repoRoot}
                 onClick={closeMobileMenu}
                 className={getLinkClass}>
                 Home
               </NavLink>
               |{/* Products */}
               <NavLink
-                to="/products"
+                to={repoRoot + "products"}
                 onClick={closeMobileMenu}
                 className={getLinkClass}>
                 Products
               </NavLink>
               |{/* Cart */}
               <NavLink
-                to="/cart"
+                to={repoRoot + "cart"}
                 onClick={closeMobileMenu}
                 className={getCartLinkClass}>
                 Cart
@@ -68,14 +70,14 @@ export default function Navbar() {
                 <>
                   {/* Dashboard */}
                   <NavLink
-                    to="/dashboard"
+                    to={repoRoot + "dashboard"}
                     onClick={closeMobileMenu}
                     className={getLinkClass}>
                     Dashboard
                   </NavLink>
                   |{/* Profile */}
                   <NavLink
-                    to="/profile"
+                    to={repoRoot + "profile"}
                     onClick={closeMobileMenu}
                     className={getLinkClass}>
                     Profile
@@ -85,7 +87,7 @@ export default function Navbar() {
               {/* Register only appears when logged out */}
               {!isLoggedIn && (
                 <NavLink
-                  to="/register"
+                  to={repoRoot + "register"}
                   onClick={closeMobileMenu}
                   className={getLinkClass}>
                   Register
@@ -96,7 +98,7 @@ export default function Navbar() {
                 <Logout />
               ) : (
                 <NavLink
-                  to="/login"
+                  to={repoRoot + "login"}
                   onClick={closeMobileMenu}
                   className="rounded-lg bg-(--spark) px-5 py-2.5 font-semibold text-(--ink) shadow-md transition hover:brightness-95">
                   Login
@@ -128,7 +130,7 @@ export default function Navbar() {
             className="flex flex-col gap-1 border-t border-white/10 py-4 lg:hidden">
             {/* Home */}
             <NavLink
-              to="/"
+              to={repoRoot}
               onClick={closeMobileMenu}
               className={getMobileLinkClass}>
               Home
@@ -136,7 +138,7 @@ export default function Navbar() {
 
             {/* Products */}
             <NavLink
-              to="/products"
+              to={repoRoot + "products"}
               onClick={closeMobileMenu}
               className={getMobileLinkClass}>
               Products
@@ -144,7 +146,7 @@ export default function Navbar() {
 
             {/* Cart */}
             <NavLink
-              to="/cart"
+              to={repoRoot + "cart"}
               onClick={closeMobileMenu}
               className={getMobileLinkClass}>
               <div className="flex items-center justify-between">
@@ -163,7 +165,7 @@ export default function Navbar() {
               <>
                 {/* Dashboard */}
                 <NavLink
-                  to="/dashboard"
+                  to={repoRoot + "dashboard"}
                   onClick={closeMobileMenu}
                   className={getMobileLinkClass}>
                   Dashboard
@@ -171,7 +173,7 @@ export default function Navbar() {
 
                 {/* Profile */}
                 <NavLink
-                  to="/profile"
+                  to={repoRoot + "profile"}
                   onClick={closeMobileMenu}
                   className={getMobileLinkClass}>
                   Profile
@@ -186,7 +188,7 @@ export default function Navbar() {
               <>
                 {/* Register */}
                 <NavLink
-                  to="/register"
+                  to={repoRoot + "register"}
                   onClick={closeMobileMenu}
                   className={getMobileLinkClass}>
                   Register
@@ -194,7 +196,7 @@ export default function Navbar() {
 
                 {/* Login */}
                 <NavLink
-                  to="/login"
+                  to={repoRoot + "login"}
                   onClick={closeMobileMenu}
                   className="mx-3 mt-2 rounded-lg bg-(--spark) px-5 py-2.5 text-center font-semibold text-(--ink) shadow-md transition hover:brightness-95">
                   Login

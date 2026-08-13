@@ -3,12 +3,14 @@ import useRedirect from "../hooks/useRedirect";
 import pic1 from "../assets/404_pic.jpg";
 import Spark from "./Spark";
 
+import { repoRoot } from "../../public/repoRoot";
+
 export default function Page404() {
   // Set up the TW Elements ripple effect.
   useRippleTWE();
 
   // Redirect the user to the home page.
-  const handleRedirect = useRedirect("/", 5000);
+  const handleRedirect = useRedirect(repoRoot, 5000);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-(--surface) p-6">

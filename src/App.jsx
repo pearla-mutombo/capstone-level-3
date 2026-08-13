@@ -15,7 +15,7 @@ import Register from "./pages/Register";
 import Page404 from "./components/Page404";
 import { RedirectGitHub404 } from "./components/RedirectGitHub404";
 
-import { repoRoot } from "../config/repoRoot.js";
+import { repoRoot } from "../public/repoRoot.js";
 
 import "./App.css";
 
@@ -28,25 +28,25 @@ const initialState = new Map([
 function App() {
   return (
     <StateContext initialState={initialState}>
-      <BrowserRouter basename={repoRoot}>
+      <BrowserRouter>
         <RedirectGitHub404 />
 
         <Header />
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path={repoRoot} element={<Home />} />
 
-          <Route path="/products" element={<Products />} />
+          <Route path={repoRoot + "products"} element={<Products />} />
 
-          <Route path="/cart" element={<Cart />} />
+          <Route path={repoRoot + "cart"} element={<Cart />} />
 
-          <Route path="/login" element={<Login />} />
+          <Route path={repoRoot + "login"} element={<Login />} />
 
-          <Route path="/register" element={<Register />} />
+          <Route path={repoRoot + "register"} element={<Register />} />
 
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path={repoRoot + "dashboard"} element={<Dashboard />} />
 
-          <Route path="/profile" element={<Profile />} />
+          <Route path={repoRoot + "profile"} element={<Profile />} />
 
           {/* Show the custom 404 page to unknown routes. */}
           <Route path="*" element={<Page404 />} />
