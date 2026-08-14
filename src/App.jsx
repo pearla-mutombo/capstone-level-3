@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 import Page404 from "./components/Page404";
 import { RedirectGitHub404 } from "./components/RedirectGitHub404";
@@ -34,12 +35,14 @@ function App() {
         <Header />
 
         <Routes>
+          {/* Main pages */}
           <Route path="/" element={<Home />} />
 
           <Route path="/products" element={<Products />} />
 
           <Route path="/cart" element={<Cart />} />
 
+          {/* Authentication */}
           <Route path="/login" element={<Login />} />
 
           <Route path="/register" element={<Register />} />
@@ -48,7 +51,10 @@ function App() {
 
           <Route path="/profile" element={<Profile />} />
 
-          {/* Show the custom 404 page to unknown routes. */}
+          {/* Administrator page */}
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
+          {/* Custom 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>
 

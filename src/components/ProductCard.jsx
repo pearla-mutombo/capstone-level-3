@@ -36,7 +36,13 @@ export default function ProductCard({ product, handleAddToCart }) {
     });
   }
 }
-// Note: contains reusable React component and matahed filename;
-// props <productCard product={product} handleAddToCart={handleAddToCart}/>
-// Destructing directly in parameters function ProductCard({ product, handleAddToCart })
-// even handler onClick={handleAddButtonClick}
+// Note: This reusable component displays one product.
+// Props are destructured directly in the function parameters.
+// The button uses an event handler to add the product to the cart.
+
+// "ProductCard is a reusable component that receives a product and an 
+// add-to-cart function as props. I destructure the props directly in the 
+// function parameters. The component displays the product information, 
+// and when the user clicks Add to Cart, the handleAddButtonClick function 
+// sends the selected product back to the parent component through the
+// handleAddToCart prop."

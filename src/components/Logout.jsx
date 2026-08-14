@@ -1,106 +1,95 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useModalTWE from "../hooks/useModalTWE";
 import { useStateContext } from "../hooks/useStateContext";
 
 export default function Logout() {
-  useModalTWE();
-
   const [, setLogin] = useStateContext("login");
   const navigate = useNavigate();
 
-  const closeButtonRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Open the logout confirmation.
+  function handleLogoutClick() {
+    setIsModalOpen(true);
+  }
+
+  // Close the logout confirmation.
+  function handleCancelClick() {
+    setIsModalOpen(false);
+  }
+
+  // Clear the user's login information and return to Login.
+  function handleLogout() {
+    const loggedOutUser = {
+      email: "",
+      password: "",
+    };
+
+    setLogin(loggedOutUser);
+    setIsModalOpen(false);
+
+    navigate("/login");
+  }
 
   return (
     <>
       {/* Logout Button */}
       <button
         type="button"
-        data-twe-modal-init
-        data-twe-target="#logoutModal"
+        onClick={handleLogoutClick}
         className="rounded-lg bg-red-600 px-5 py-2.5 font-semibold text-white transition hover:bg-red-700">
         Logout
       </button>
 
-      {/* Logout Modal */}
-      <div
-        id="logoutModal"
-        tabIndex="-1"
-        aria-labelledby="logoutModalLabel"
-        aria-hidden="true"
-        className="fixed left-0 top-0 z-50 hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none">
-        <div className="relative mx-auto mt-7 w-full max-w-lg opacity-0 transition-all duration-300 ease-in-out">
-          <div className="relative flex w-full flex-col rounded-md border-none bg-white shadow-lg outline-none">
+      {/* Logout Confirmation Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logoutModalTitle">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
             {/* Modal Header */}
-            <div className="flex items-center justify-between rounded-t-md border-b-2 border-gray-100 p-4">
-              <h5
-                id="logoutModalLabel"
-                className="text-xl font-medium leading-normal text-gray-900">
+            <div className="flex items-center justify-between">
+              <h2
+                id="logoutModalTitle"
+                className="text-2xl font-bold text-gray-900">
                 Confirm Logout
-              </h5>
+              </h2>
 
-              {/* Close Button */}
               <button
                 type="button"
-                ref={closeButtonRef}
-                className="border-none bg-transparent text-2xl font-semibold text-gray-500 hover:text-gray-800 focus:outline-none"
-                data-twe-modal-dismiss
-                aria-label="Close">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="h-6 w-6">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                onClick={handleCancelClick}
+                className="text-2xl font-semibold text-gray-500 hover:text-gray-800"
+                aria-label="Close logout confirmation">
+                ×
               </button>
             </div>
 
             {/* Modal Message */}
-            <div className="relative flex-auto p-4 text-gray-700">
-              Are you sure you want to logout?
-            </div>
+            <p className="mt-4 text-gray-600">
+              Are you sure you want to logout of your NOVUS Market account?
+            </p>
 
             {/* Modal Buttons */}
-            <div className="flex items-center justify-end rounded-b-md border-t-2 border-gray-100 p-4">
-              {/* Cancel Button */}
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                className="rounded bg-gray-200 px-6 py-2.5 text-xs font-medium uppercase text-gray-700 hover:bg-gray-300"
-                data-twe-modal-dismiss>
+                onClick={handleCancelClick}
+                className="rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition hover:bg-gray-100">
                 Cancel
               </button>
 
-              {/* Confirm Logout Button */}
               <button
                 type="button"
                 onClick={handleLogout}
-                className="ml-2 rounded bg-red-600 px-6 py-2.5 text-xs font-medium uppercase text-white hover:bg-red-700">
-                Confirm
+                className="rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700">
+                Confirm Logout
               </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
-
-  function handleLogout() {
-    closeButtonRef.current.click();
-
-    const data = {
-      email: "",
-      password: "",
-    };
-
-    setLogin(data);
-
-    navigate("/login");
-  }
 }

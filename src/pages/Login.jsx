@@ -14,62 +14,6 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  function handleEmailChange(event) {
-    setEmail(event.target.value);
-    setLoginError("");
-  }
-
-  function handlePasswordChange(event) {
-    setPassword(event.target.value);
-    setLoginError("");
-  }
-
-  async function handleLogin(event) {
-    event.preventDefault();
-
-    if (email === "" || password === "") {
-      setLoginError("Please enter your email and password.");
-      return;
-    }
-
-    setIsLoggingIn(true);
-    setLoginError("");
-
-    try {
-      const response = await fetch("http://localhost:3001/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setLoginError(data.error || "Invalid email or password.");
-        return;
-      }
-
-      // Save the logged-in user in shared state.
-      setLogin({
-        id: data.id,
-        email: data.email,
-      });
-
-      // Send the user to the dashboard.
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login request error:", error);
-      setLoginError("Unable to connect to the server. Please try again.");
-    } finally {
-      setIsLoggingIn(false);
-    }
-  }
-
   return (
     <main
       className="flex min-h-screen items-center justify-center px-4 py-12"
@@ -83,13 +27,17 @@ export default function Login() {
           </p>
         </div>
 
+        {/* Display an error when the login is unsuccessful. */}
         {loginError && (
-          <div className="mb-6 rounded-lg border border-red-300 bg-red-100 p-4 text-red-700">
+          <div
+            className="mb-6 rounded-lg border border-red-300 bg-red-100 p-4 text-red-700"
+            role="alert">
             {loginError}
           </div>
         )}
 
         <form onSubmit={handleLogin}>
+          {/* Email */}
           <div className="mb-5">
             <label
               htmlFor="email"
@@ -103,10 +51,12 @@ export default function Login() {
               value={email}
               onChange={handleEmailChange}
               placeholder="Enter your email"
+              required
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
           </div>
 
+          {/* Password */}
           <div className="mb-6">
             <label
               htmlFor="password"
@@ -120,10 +70,12 @@ export default function Login() {
               value={password}
               onChange={handlePasswordChange}
               placeholder="Enter your password"
+              required
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
           </div>
 
+          {/* Login Button */}
           <Button type="submit" disabled={isLoggingIn}>
             {isLoggingIn ? "Logging in..." : "Login"}
           </Button>
@@ -141,4 +93,80 @@ export default function Login() {
       </div>
     </main>
   );
+
+  // Update the email state when the user types.
+  function handleEmailChange(event) {
+    setEmail(event.target.value);
+    setLoginError("");
+  }
+
+  // Update the password state when the user types.
+  function handlePasswordChange(event) {
+    setPassword(event.target.value);
+    setLoginError("");
+  }
+
+  // Handle the login form.
+  async function handleLogin(event) {
+    event.preventDefault();
+
+    // Check that the user entered both fields.
+    if (email.trim() === "" || password === "") {
+      setLoginError("Please enter your email and password.");
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setLoginError("");
+
+    try {
+      const response = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("LOGIN DATA FROM SERVER:", data);
+
+      if (!response.ok) {
+        setLoginError(data.error || "Invalid email or password.");
+        return;
+      }
+
+      // Get the user's information from the server.
+      const loggedInEmail = data.email || "";
+      const loggedInId = data.id || "";
+
+      // Save the logged-in user in shared state.
+      setLogin({
+        id: loggedInId,
+        email: loggedInEmail,
+        isAdmin: data.isAdmin,
+      });
+
+      // Check whether the server identified this user as an administrator.
+      const isAdmin = data.isAdmin;
+
+      // Send administrators to the product management dashboard.
+      if (isAdmin) {
+        navigate("/admin-dashboard");
+        return;
+      }
+
+      // Send regular customers to their customer dashboard.
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login request error:", error);
+      setLoginError("Unable to connect to the server. Please try again.");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  }
 }

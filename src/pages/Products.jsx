@@ -170,3 +170,9 @@ export default function Products() {
     </main>
   );
 }
+
+// Note: I use conditional rendering to give the user feedback based on the 
+// application's current state. While the API is loading, I display a Loader. If the 
+// API returns an error, I display an error message. If the search and filters return 
+// no products, I tell the user no products were found. Otherwise, I render the 
+// products.

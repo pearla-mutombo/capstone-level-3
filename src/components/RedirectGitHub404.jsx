@@ -8,16 +8,20 @@ export function RedirectGitHub404() {
 
   return null;
 
-  // Check whether GitHub Pages saved the original URL.
+  // Restore the original GitHub Pages URL, if one was saved.
   function componentDidMount() {
     const redirectedFrom = localStorage.getItem("redirectedFrom");
 
-    // If a URL was saved, navigate back to that page.
-    if (redirectedFrom) {
-      // Remove the saved URL after using it.
-      localStorage.removeItem("redirectedFrom");
+    // Nothing to restore.
+    if (!redirectedFrom) {
+      return;
+    }
 
-      // Navigate to the original page.
+    // Remove the saved URL so it is only used once.
+    localStorage.removeItem("redirectedFrom");
+
+    // Only redirect to a valid internal path.
+    if (redirectedFrom.startsWith("/")) {
       navigateTo(redirectedFrom);
     }
   }

@@ -45,24 +45,36 @@ app.post("/api/login", async (req, res) => {
       },
     });
 
-    // Check whether the email exists.
-    if (!user) {
+    // Check if we found a user with this email.
+    const userWasFound = user !== null;
+
+    if (!userWasFound) {
       return res.status(401).json({
         error: "Invalid email or password.",
       });
     }
 
-    // Check whether the password matches.
-    if (user.password !== password) {
+    // Check if the password is correct.
+    const passwordIsCorrect = user.password === password;
+
+    if (!passwordIsCorrect) {
       return res.status(401).json({
         error: "Invalid email or password.",
       });
     }
+
+    // Check whether this user is the NOVUS Market administrator.
+    const isAdmin = user.email === "admin@novusmarket.com";
 
     // Login was successful.
+
+    // Check whether this user is the NOVUS Market administrator.
+    const isAdmin = user.email === "admin@novusmarket.com";
+
     res.json({
       id: user.id.toString(),
       email: user.email,
+      isAdmin,
     });
   } catch (error) {
     console.error("Login error:", error);
