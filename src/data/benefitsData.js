@@ -21,11 +21,7 @@ export const benefits = [
     id: 4,
     icon: "💬",
     title: "Customer Support",
-<<<<<<< HEAD
     description:
       "We're here to help whenever you need us. Contact us at (404) 624-6335 or support@novusmarket.com .",
-=======
-    description: "We're here to help whenever you need us. Contact us at (404) 624-6335 or support@novusmarket.com .",
->>>>>>> dd4b6cc83a70db189704dd9885ba643405b33a43
   },
 ];

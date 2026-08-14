@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_URL } from "../../config/api.js";
 
 // This hook gets products from our Express server.
 // The server communicates with Prisma and the PostgreSQL database.
@@ -30,7 +31,7 @@ export default function useProducts() {
       setIsLoading(true);
       setErrorMessage("");
 
-      const response = await fetch("/api/products");
+      const response = await fetch(`${API_URL}/api/products`);
 
       if (!response.ok) {
         throw new Error("The server returned an error.");
@@ -52,7 +53,7 @@ export default function useProducts() {
     try {
       setErrorMessage("");
 
-      const response = await fetch("/api/products", {
+      const response = await fetch(`${API_URL}/api/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +83,7 @@ export default function useProducts() {
     try {
       setErrorMessage("");
 
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -116,7 +117,7 @@ export default function useProducts() {
     try {
       setErrorMessage("");
 
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
         method: "DELETE",
       });
 
