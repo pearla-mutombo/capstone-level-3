@@ -39,7 +39,7 @@ const categories = [
     id: 7,
     name: "Yoga",
     description:
-      "Elevate your practice with eco-friendly yoga mats, organic apparel, and mindful essentials designed to bring peace to your daily flow.",
+      "Enhance your routine with sustainable yoga mats, organic clothing, and mindful tools created to bring tranquility to your practice.",
     icon: "🧘‍♀️",
   },
 ];
