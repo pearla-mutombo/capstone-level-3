@@ -28,6 +28,7 @@ function prepareForJson(data) {
 // POST login
 app.post("/api/login", async (req, res) => {
   try {
+    // Get the email and password from the login form.
     const email = req.body.email?.trim().toLowerCase();
     const password = req.body.password;
 
@@ -38,39 +39,38 @@ app.post("/api/login", async (req, res) => {
       });
     }
 
-    // Find the user by email.
+    // Find the user by email in the database.
     const user = await prisma.users.findFirst({
       where: {
         email,
       },
     });
 
-    // Check if we found a user with this email.
+    // Boolean variable: tells us whether the user was found.
     const userWasFound = user !== null;
 
+    // If the user was not found, stop the login.
     if (!userWasFound) {
       return res.status(401).json({
         error: "Invalid email or password.",
       });
     }
 
-    // Check if the password is correct.
+    // Check whether the password matches the database password.
     const passwordIsCorrect = user.password === password;
 
+    // If the password is incorrect, stop the login.
     if (!passwordIsCorrect) {
       return res.status(401).json({
         error: "Invalid email or password.",
       });
     }
 
-    // Check whether this user is the NOVUS Market administrator.
+    // Boolean variable: identifies the NOVUS Market administrator.
     const isAdmin = user.email === "admin@novusmarket.com";
 
     // Login was successful.
-
-    // Check whether this user is the NOVUS Market administrator.
-    const isAdmin = user.email === "admin@novusmarket.com";
-
+    // Send the user's information back to React.
     res.json({
       id: user.id.toString(),
       email: user.email,
@@ -92,6 +92,7 @@ app.post("/api/login", async (req, res) => {
 // POST register a new user
 app.post("/api/register", async (req, res) => {
   try {
+    // Get the email and password from the registration form.
     const email = req.body.email?.trim().toLowerCase();
     const password = req.body.password;
 
@@ -116,13 +117,14 @@ app.post("/api/register", async (req, res) => {
       },
     });
 
+    // Boolean condition: stop registration if the account already exists.
     if (existingUser) {
       return res.status(409).json({
         error: "An account with that email already exists.",
       });
     }
 
-    // Create the new user.
+    // Create the new user in the database.
     const user = await prisma.users.create({
       data: {
         email,
@@ -152,12 +154,14 @@ app.post("/api/register", async (req, res) => {
 // READ
 app.get("/api/products", async (req, res) => {
   try {
+    // Ask Prisma to read all products from the database.
     const products = await prisma.products.findMany({
       include: {
         reviews: true,
       },
     });
 
+    // Send the products back to React as JSON.
     res.json(prepareForJson(products));
   } catch (error) {
     console.error("GET products error:", error);
@@ -172,8 +176,10 @@ app.get("/api/products", async (req, res) => {
 // CREATE
 app.post("/api/products", async (req, res) => {
   try {
+    // Get the product information from the request.
     const { name, src, price, category } = req.body;
 
+    // Create the product in the database.
     const product = await prisma.products.create({
       data: {
         name,
@@ -183,6 +189,7 @@ app.post("/api/products", async (req, res) => {
       },
     });
 
+    // Send the new product back to React.
     res.status(201).json(prepareForJson(product));
   } catch (error) {
     console.error("POST product error:", error);
@@ -197,9 +204,13 @@ app.post("/api/products", async (req, res) => {
 // UPDATE
 app.put("/api/products/:id", async (req, res) => {
   try {
+    // Get the product ID from the URL.
     const id = BigInt(req.params.id);
+
+    // Get the updated product information.
     const { name, src, price, category } = req.body;
 
+    // Update the product in the database.
     const product = await prisma.products.update({
       where: {
         id,
@@ -212,6 +223,7 @@ app.put("/api/products/:id", async (req, res) => {
       },
     });
 
+    // Send the updated product back to React.
     res.json(prepareForJson(product));
   } catch (error) {
     console.error("PUT product error:", error);
@@ -226,14 +238,18 @@ app.put("/api/products/:id", async (req, res) => {
 // DELETE
 app.delete("/api/products/:id", async (req, res) => {
   try {
+    // Get the product ID from the URL.
     const id = BigInt(req.params.id);
 
+    // Delete the product from the database.
     await prisma.products.delete({
       where: {
         id,
       },
     });
 
+    // 204 means the request was successful
+    // and there is no information to send back.
     res.status(204).send();
   } catch (error) {
     console.error("DELETE products error:", error);
@@ -254,20 +270,32 @@ app.listen(PORT, () => {
   console.log(`API server running on http://localhost:${PORT}`);
 });
 
-// Explanation for my project presentation:
+// ========================================
+// PROJECT PRESENTATION NOTES
+// ========================================
 //
 // "I created an Express server that provides REST API
-// endpoints for my NOVUS Market products. Express receives
-// requests from my React application, Prisma communicates
-// with my PostgreSQL database, and the server sends the
-// database results back to React as JSON.
+// endpoints for my NOVUS Market application.
 //
-// My four CRUD routes are:
+// Express receives requests from my React application,
+// Prisma communicates with my PostgreSQL database,
+// and my server sends the database results back to React
+// as JSON.
 //
-// GET    → Read products
-// POST   → Create a product
-// PUT    → Update a product
-// DELETE → Delete a product
+// My product API demonstrates the four CRUD operations:
+//
+// GET    → READ products
+// POST   → CREATE a product
+// PUT    → UPDATE a product
+// DELETE → DELETE a product
 //
 // I also created a login endpoint that checks the user's
-// email and password against my users table."
+// email and password against my users table.
+//
+// I use boolean variables such as userWasFound,
+// passwordIsCorrect, and isAdmin to make decisions
+// with conditionals.
+//
+// The isAdmin boolean lets the React application know
+// whether the logged-in user should be sent to the
+// administrator product management dashboard."

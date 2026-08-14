@@ -8,13 +8,35 @@
     <title>NOVUS Market</title>
 
     <script>
-      // Save the URL that the visitor tried to open.
+      // GitHub Pages sends visitors here when
+      // a React Router page is refreshed directly.
+
       const currentPath = window.location.pathname;
+      const currentSearch = window.location.search;
+      const currentHash = window.location.hash;
 
-      localStorage.setItem("redirectedFrom", currentPath);
+      // Remove the GitHub Pages project folder
+      // so React Router receives only the app route.
+      const appPath = currentPath.replace("/capstone-level-3", "") || "/";
 
-      // Send the visitor back to the React application.
-      window.location.replace("/react-deploy/");
+      // Save the route that the visitor originally requested.
+      localStorage.setItem(
+        "redirectedFrom",
+        appPath + currentSearch + currentHash,
+      );
+
+      // Send the visitor back to the NOVUS Market application.
+      window.location.replace("/capstone-level-3/");
+
+      // Note: I use the browser's current path to remember which React page the
+      //  visitor was trying to access. GitHub Pages uses my 404 page when
+      // someone refreshes a React route, so I temporarily save that route in
+      // localStorage. When my React application loads again, RedirectGitHub404
+      // reads that saved route and sends the visitor back to the correct page.
+      //  *the issue i had GitHub with deployment was  that 404.html was redirection
+      //  visitore to /react-deploy/ while my actual GitHub Pages
+      // project is /captsone-level-3 so the routing has been fighting us thats why
+      // i just fifgured it out.
     </script>
   </head>
 
