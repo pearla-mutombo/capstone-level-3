@@ -22,14 +22,15 @@ export function useStateContext(key) {
   const { getValue, setValue, hasKey, subscribe, unsubscribe } = closestContext;
 
   // Get the current value.
-  const value = getValue(key);
+  const value = getSafeValue();
 
+  // This state causes the component to update when shared state changes.
   const [, setStateVersion] = useState(1);
 
   // Subscribe this component to changes.
   useEffect(componentDidMount, []);
 
-  // Remove the subscription when the component leaves the page.
+  // Remove the subscription when this component leaves the page.
   useEffect(componentWillUnmount, []);
 
   return [value, setter];
@@ -46,10 +47,26 @@ export function useStateContext(key) {
     };
   }
 
+  // Get the shared state safely.
+  function getSafeValue() {
+    const currentValue = getValue(key);
+
+    // The cart must always be an array.
+    if (key === "cartItems") {
+      if (Array.isArray(currentValue)) {
+        return currentValue;
+      }
+
+      return [];
+    }
+
+    return currentValue;
+  }
+
   // Update the shared state.
   function setter(newValue) {
     /*
-      This supports BOTH forms:
+      This supports two forms:
 
       1. Direct value:
 
@@ -60,16 +77,43 @@ export function useStateContext(key) {
          setCartItems((previousItems) => {
            return newCart;
          });
-
-      Products.jsx uses the second form.
     */
 
+    // Handle a function updater.
     if (typeof newValue === "function") {
-      const currentValue = getValue(key);
+      let currentValue = getValue(key);
+
+      // The cart must always start as an array.
+      if (key === "cartItems" && !Array.isArray(currentValue)) {
+        currentValue = [];
+      }
 
       const updatedValue = newValue(currentValue);
 
+      // Make sure the cart can never become an object,
+      // string, number, or another non-array value.
+      if (key === "cartItems") {
+        if (Array.isArray(updatedValue)) {
+          setValue(key, updatedValue);
+        } else {
+          setValue(key, []);
+        }
+
+        return;
+      }
+
       setValue(key, updatedValue);
+
+      return;
+    }
+
+    // Handle a normal value.
+    if (key === "cartItems") {
+      if (Array.isArray(newValue)) {
+        setValue(key, newValue);
+      } else {
+        setValue(key, []);
+      }
 
       return;
     }
