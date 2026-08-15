@@ -48,32 +48,6 @@ export function useStateContext(key) {
 
   // Update the shared state.
   function setter(newValue) {
-    /*
-      This supports BOTH forms:
-
-      1. Direct value:
-
-         setCartItems(newCart);
-
-      2. Function updater:
-
-         setCartItems((previousItems) => {
-           return newCart;
-         });
-
-      Products.jsx uses the second form.
-    */
-
-    if (typeof newValue === "function") {
-      const currentValue = getValue(key);
-
-      const updatedValue = newValue(currentValue);
-
-      setValue(key, updatedValue);
-
-      return;
-    }
-
     setValue(key, newValue);
   }
 }
