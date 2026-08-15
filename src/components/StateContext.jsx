@@ -16,14 +16,18 @@ export function StateContext({ children, initialState }) {
   const [, setStateVersion] = useState(1);
   const [listeners] = useState(new Set());
 
-  // Create a copy so we do not modify the original initialState.
+  // Create the shared state only once.
   const [map] = useState(() => {
     const startingState = new Map(initialState);
 
+    // Load the saved guest cart.
     const savedCart = loadSavedCart();
 
-    if (startingState.has("cartItems") && savedCart !== null) {
+    // Only use the saved value if it is actually an array.
+    if (Array.isArray(savedCart)) {
       startingState.set("cartItems", savedCart);
+    } else {
+      startingState.set("cartItems", []);
     }
 
     return startingState;
@@ -51,7 +55,7 @@ export function StateContext({ children, initialState }) {
 
   return <>{component}</>;
 
-  //////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
   function componentDidMount() {
     const Context = createContext();
@@ -88,9 +92,14 @@ export function StateContext({ children, initialState }) {
   }
 
   function setValue(key, value) {
+    // Make sure the cart is always an array.
+    if (key === "cartItems" && !Array.isArray(value)) {
+      value = [];
+    }
+
     map.set(key, value);
 
-    // Save the cart for guest shoppers.
+    // Save the guest cart.
     if (key === "cartItems") {
       try {
         localStorage.setItem("novus_cart", JSON.stringify(value));
@@ -119,17 +128,31 @@ function incrementVersion(currentVersion) {
   return currentVersion + 1;
 }
 
-// Load a previously saved guest cart.
+// Load the saved guest cart.
 function loadSavedCart() {
   try {
     const savedCart = localStorage.getItem("novus_cart");
 
-    if (savedCart) {
-      return JSON.parse(savedCart);
+    if (!savedCart) {
+      return [];
     }
+
+    const parsedCart = JSON.parse(savedCart);
+
+    // Only return arrays.
+    if (Array.isArray(parsedCart)) {
+      return parsedCart;
+    }
+
+    // If the saved value is not an array, start fresh.
+    localStorage.removeItem("novus_cart");
+
+    return [];
   } catch (error) {
     console.error("Unable to load saved cart:", error);
-  }
 
-  return null;
+    localStorage.removeItem("novus_cart");
+
+    return [];
+  }
 }
