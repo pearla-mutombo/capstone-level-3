@@ -3,139 +3,60 @@ import { useContext, useEffect, useState } from "react";
 const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
 
 export function useStateContext(key) {
-  const Contexts = window[STATE_CONTEXT_LIST];
+  const contexts = window[STATE_CONTEXT_LIST];
 
-  let closestContext = null;
+  let sharedContext = null;
 
-  // Find the StateContext that contains this component.
-  for (let index = 0; index < Contexts.length; index++) {
-    const contextValue = useContext(Contexts[index]);
+  // Find the StateContext that belongs to this component.
+  for (let index = 0; index < contexts.length; index++) {
+    const contextValue = useContext(contexts[index]);
 
     if (contextValue) {
-      closestContext = contextValue;
+      sharedContext = contextValue;
     }
   }
 
-  // Make sure the requested state exists.
-  handleErrors(key, closestContext);
+  // Make sure the state exists.
+  if (!key) {
+    throw new Error("useStateContext needs a state key.");
+  }
 
-  const { getValue, setValue, hasKey, subscribe, unsubscribe } = closestContext;
+  if (!sharedContext) {
+    throw new Error("This component must be inside StateContext.");
+  }
+
+  if (!sharedContext.hasKey(key)) {
+    throw new Error(`The state key "${key}" does not exist.`);
+  }
+
+  const { getValue, setValue, subscribe, unsubscribe } = sharedContext;
 
   // Get the current value.
-  const value = getSafeValue();
+  const value = getValue(key);
 
-  // This state causes the component to update when shared state changes.
-  const [, setStateVersion] = useState(1);
+  // This causes the component to update when shared state changes.
+  const [, setStateVersion] = useState(0);
 
-  // Subscribe this component to changes.
-  useEffect(componentDidMount, []);
-
-  // Remove the subscription when this component leaves the page.
-  useEffect(componentWillUnmount, []);
-
-  return [value, setter];
-
-  ////////////////////////////////////////////////////////////
-
-  function componentDidMount() {
+  useEffect(() => {
     subscribe(setStateVersion, key);
-  }
 
-  function componentWillUnmount() {
-    return function cleanup() {
+    return () => {
       unsubscribe(setStateVersion);
     };
-  }
+  }, []);
 
-  // Get the shared state safely.
-  function getSafeValue() {
-    const currentValue = getValue(key);
-
-    // The cart must always be an array.
-    if (key === "cartItems") {
-      if (Array.isArray(currentValue)) {
-        return currentValue;
-      }
-
-      return [];
-    }
-
-    return currentValue;
-  }
-
-  // Update the shared state.
+  // Allow normal values AND function updates.
   function setter(newValue) {
-    /*
-      This supports two forms:
-
-      1. Direct value:
-
-         setCartItems(newCart);
-
-      2. Function updater:
-
-         setCartItems((previousItems) => {
-           return newCart;
-         });
-    */
-
-    // Handle a function updater.
     if (typeof newValue === "function") {
-      let currentValue = getValue(key);
-
-      // The cart must always start as an array.
-      if (key === "cartItems" && !Array.isArray(currentValue)) {
-        currentValue = [];
-      }
-
+      const currentValue = getValue(key);
       const updatedValue = newValue(currentValue);
 
-      // Make sure the cart can never become an object,
-      // string, number, or another non-array value.
-      if (key === "cartItems") {
-        if (Array.isArray(updatedValue)) {
-          setValue(key, updatedValue);
-        } else {
-          setValue(key, []);
-        }
-
-        return;
-      }
-
       setValue(key, updatedValue);
-
-      return;
-    }
-
-    // Handle a normal value.
-    if (key === "cartItems") {
-      if (Array.isArray(newValue)) {
-        setValue(key, newValue);
-      } else {
-        setValue(key, []);
-      }
-
       return;
     }
 
     setValue(key, newValue);
   }
-}
 
-function handleErrors(key, context) {
-  if (!key) {
-    throw new Error('A key is required. Example: useStateContext("username")');
-  }
-
-  if (!context) {
-    throw new Error(
-      "Invalid StateContext. Include this component in <StateContext> to give it access.",
-    );
-  }
-
-  if (!context.hasKey(key)) {
-    throw new Error(
-      "Invalid key. Keys must be declared in initialState. Example: <StateContext initialState={state}>",
-    );
-  }
+  return [value, setter];
 }
