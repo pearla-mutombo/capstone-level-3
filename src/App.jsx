@@ -21,7 +21,6 @@ import { repoRoot } from "../config/repoRoot.js";
 
 import "./App.css";
 
-// Starting shared state for NOVUS Market.
 const initialState = new Map([
   ["login", { email: "", password: "" }],
   ["cartItems", []],
@@ -36,26 +35,18 @@ function App() {
         <Header />
 
         <Routes>
-          {/* Main pages */}
           <Route path="/" element={<Home />} />
-
           <Route path="/products" element={<Products />} />
-
           <Route path="/cart" element={<Cart />} />
 
-          {/* Authentication */}
           <Route path="/login" element={<Login />} />
-
           <Route path="/register" element={<Register />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
-
           <Route path="/profile" element={<Profile />} />
 
-          {/* Administrator page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
-          {/* Custom 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>
 
