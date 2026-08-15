@@ -1,8 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { StateContext } from "./components/StateContext.jsx";
+import { useEffect } from "react";
 
-import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
@@ -20,13 +19,42 @@ import { repoRoot } from "../config/repoRoot.js";
 
 import "./App.css";
 
-// Starting shared state for NOVUS Market
+// Starting cart for NOVUS Market.
+// If a guest already has a saved cart,
+// load it from the browser.
+function getSavedCart() {
+  try {
+    const savedCart = localStorage.getItem("novus_cart");
+
+    if (savedCart) {
+      return JSON.parse(savedCart);
+    }
+  } catch (error) {
+    console.error("Unable to load saved cart:", error);
+  }
+
+  return [];
+}
+
+// Starting shared state for NOVUS Market.
 const initialState = new Map([
   ["login", { email: "", password: "" }],
-  ["cartItems", []],
+  ["cartItems", getSavedCart()],
 ]);
 
 function App() {
+  // Get the current cart from the shared StateContext.
+  const [cartItems] = useStateContext("cartItems");
+
+  // Save the cart whenever the cart changes.
+  useEffect(() => {
+    try {
+      localStorage.setItem("novus_cart", JSON.stringify(cartItems));
+    } catch (error) {
+      console.error("Unable to save cart:", error);
+    }
+  }, [cartItems]);
+
   return (
     <StateContext initialState={initialState}>
       <BrowserRouter basename={repoRoot}>
