@@ -2,21 +2,29 @@ import { useContext, useEffect, useState } from "react";
 
 const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
 
+window[STATE_CONTEXT_LIST] = [];
+
 export function useStateContext(key) {
   const Contexts = window[STATE_CONTEXT_LIST];
 
   let closestContext = null;
+
   for (let index = 0; index < Contexts.length; index++) {
     const contextValue = useContext(Contexts[index]);
-    if (contextValue) closestContext = contextValue;
+
+    if (contextValue) {
+      closestContext = contextValue;
+    }
   }
 
   handleErrors(key, closestContext);
 
   const { getValue, setValue, hasKey, subscribe, unsubscribe } = closestContext;
+
   const value = getValue(key);
 
   const [stateVersion, setStateVersion] = useState(1);
+
   useEffect(componentDidMount, []);
   useEffect(componentWillUnmount, []);
 
@@ -27,25 +35,32 @@ export function useStateContext(key) {
   function componentDidMount() {
     subscribe(setStateVersion, key);
   }
+
   function componentWillUnmount() {
     return function () {
       unsubscribe(setStateVersion);
     };
   }
+
   function setter(newValue) {
     setValue(key, newValue);
   }
 }
 
 function handleErrors(key, context) {
-  if (!key)
+  if (!key) {
     throw new Error('A key is required. Example: useStateContext("username")');
-  if (!context)
+  }
+
+  if (!context) {
     throw new Error(
       "Invalid StateContext. Include this component in <StateContext> to give it access.",
     );
-  if (!context.hasKey(key))
+  }
+
+  if (!context.hasKey(key)) {
     throw new Error(
       "Invalid key. Keys must be declared in initialState. Example: <StateContext initialState={state}>",
     );
+  }
 }
