@@ -2,66 +2,63 @@ import { createContext, useEffect, useState } from "react";
 
 const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
 
-// Create the list of StateContexts once.
-if (!window[STATE_CONTEXT_LIST]) {
-  window[STATE_CONTEXT_LIST] = [];
-}
+window[STATE_CONTEXT_LIST] = [];
 
 export function StateContext({ children, initialState }) {
-  // Make sure the starting state was provided.
   if (!initialState) {
-    throw new Error("initialState must be a Map object.");
+    throw new Error("StateContext needs an initialState Map.");
   }
 
-  // Store the React Context.
   const [Context, setContext] = useState(null);
+  const [isReady, setIsReady] = useState(false);
 
-  // Track whether the component has loaded.
-  const [didMount, setDidMount] = useState(false);
+  // Create the shared state one time.
+  const [stateMap] = useState(() => {
+    const newState = new Map(initialState);
 
-  // Keep track of components that are listening for state changes.
-  const [listeners] = useState(new Set());
+    // Always make sure cartItems starts as an array.
+    let savedCart = [];
 
-  // Create the shared state only once.
-  const [map] = useState(() => {
-    const startingState = new Map(initialState);
+    try {
+      const savedCartText = localStorage.getItem("novus_cart");
 
-    // Get the saved cart from the browser.
-    const savedCart = loadSavedCart();
+      if (savedCartText) {
+        const parsedCart = JSON.parse(savedCartText);
 
-    // Make sure cartItems is ALWAYS an array.
-    if (Array.isArray(savedCart)) {
-      startingState.set("cartItems", savedCart);
-    } else {
-      startingState.set("cartItems", []);
+        if (Array.isArray(parsedCart)) {
+          savedCart = parsedCart;
+        }
+      }
+    } catch (error) {
+      console.error("Could not load the saved cart:", error);
     }
 
-    return startingState;
+    newState.set("cartItems", savedCart);
+
+    return newState;
   });
 
-  // Create the React Context after the component loads.
+  // Store components that are listening for state changes.
+  const [listeners] = useState(new Set());
+
   useEffect(() => {
-    const newContext = createContext();
+    const NewContext = createContext();
 
-    window[STATE_CONTEXT_LIST].push(newContext);
+    window[STATE_CONTEXT_LIST].push(NewContext);
 
-    setContext(newContext);
-    setDidMount(true);
+    setContext(NewContext);
+    setIsReady(true);
 
-    // Remove this context when the component is removed.
     return () => {
-      const contextIndex = window[STATE_CONTEXT_LIST].indexOf(newContext);
+      const contextIndex = window[STATE_CONTEXT_LIST].indexOf(NewContext);
 
       if (contextIndex !== -1) {
         window[STATE_CONTEXT_LIST].splice(contextIndex, 1);
       }
-
-      setDidMount(false);
     };
   }, []);
 
-  // Do not render the children until the Context exists.
-  if (!didMount || !Context) {
+  if (!isReady || !Context) {
     return null;
   }
 
@@ -78,129 +75,57 @@ export function StateContext({ children, initialState }) {
     </Context>
   );
 
-  // --------------------------------------------------
   // Get a value from shared state.
-  // --------------------------------------------------
-
   function getValue(key) {
-    return map.get(key);
+    return stateMap.get(key);
   }
 
-  // --------------------------------------------------
   // Change a value in shared state.
-  // --------------------------------------------------
-
-  function setValue(key, value) {
-    // cartItems must always be an array.
-    if (key === "cartItems") {
-      if (!Array.isArray(value)) {
-        console.error("cartItems must be an array. Resetting the cart.");
-
-        value = [];
-      }
+  function setValue(key, newValue) {
+    // Cart must always be an array.
+    if (key === "cartItems" && !Array.isArray(newValue)) {
+      console.error("Cart must be an array. Resetting cart.");
+      newValue = [];
     }
 
-    // Save the new value.
-    map.set(key, value);
+    stateMap.set(key, newValue);
 
     // Save the cart in the browser.
     if (key === "cartItems") {
-      saveCart(value);
+      try {
+        localStorage.setItem("novus_cart", JSON.stringify(newValue));
+      } catch (error) {
+        console.error("Could not save the cart:", error);
+      }
     }
 
     // Tell components that the state changed.
-    listeners.forEach(updateListener);
-  }
-
-  // --------------------------------------------------
-  // Check whether a state key exists.
-  // --------------------------------------------------
-
-  function hasKey(key) {
-    return map.has(key);
-  }
-
-  // --------------------------------------------------
-  // Add a component to the listener list.
-  // --------------------------------------------------
-
-  function subscribe(setter, key) {
-    listeners.add({
-      update: setter,
-      key: key,
+    listeners.forEach((listener) => {
+      if (listener.key === key) {
+        listener.update((version) => version + 1);
+      }
     });
   }
 
-  // --------------------------------------------------
-  // Remove a component from the listener list.
-  // --------------------------------------------------
+  // Check whether a state key exists.
+  function hasKey(key) {
+    return stateMap.has(key);
+  }
 
-  function unsubscribe(setter) {
+  // Add a component to the listener list.
+  function subscribe(update, key) {
+    listeners.add({
+      update,
+      key,
+    });
+  }
+
+  // Remove a component from the listener list.
+  function unsubscribe(update) {
     for (const listener of listeners) {
-      if (listener.update === setter) {
+      if (listener.update === update) {
         listeners.delete(listener);
       }
     }
-  }
-
-  // --------------------------------------------------
-  // Tell the correct components to update.
-  // --------------------------------------------------
-
-  function updateListener(listener) {
-    listener.update(increaseVersion);
-  }
-}
-
-// Increase the state version.
-function increaseVersion(currentVersion) {
-  return currentVersion + 1;
-}
-
-// --------------------------------------------------
-// Load the guest cart from localStorage.
-// --------------------------------------------------
-
-function loadSavedCart() {
-  try {
-    const savedCart = localStorage.getItem("novus_cart");
-
-    // No saved cart means start with an empty array.
-    if (!savedCart) {
-      return [];
-    }
-
-    const parsedCart = JSON.parse(savedCart);
-
-    // Only accept an array.
-    if (Array.isArray(parsedCart)) {
-      return parsedCart;
-    }
-
-    // Remove invalid cart data.
-    localStorage.removeItem("novus_cart");
-
-    return [];
-  } catch (error) {
-    console.error("Unable to load saved cart:", error);
-
-    localStorage.removeItem("novus_cart");
-
-    return [];
-  }
-}
-
-// --------------------------------------------------
-// Save the guest cart in localStorage.
-// --------------------------------------------------
-
-function saveCart(cartItems) {
-  try {
-    // Only save an array.
-    if (Array.isArray(cartItems)) {
-      localStorage.setItem("novus_cart", JSON.stringify(cartItems));
-    }
-  } catch (error) {
-    console.error("Unable to save cart:", error);
   }
 }
