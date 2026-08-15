@@ -1,77 +1,134 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+
 import ProductCard from "../components/ProductCard";
 import Loader from "../components/Loader";
+
 import useProducts from "../hooks/useProducts";
 import useSearch from "../hooks/useSearch";
 import useSort from "../hooks/useSort";
+
 import { useStateContext } from "../hooks/useStateContext";
 
 export default function Products() {
+  // Get products from the REST API.
   const [products, isLoading, errorMessage] = useProducts();
 
+  // Get the cart setter from shared state.
   const [, setCartItems] = useStateContext("cartItems");
 
+  // Read the category from the URL.
   const [searchParams] = useSearchParams();
 
   const categoryFromUrl = searchParams.get("category") || "All";
 
+  // Search, category, and sorting state.
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(categoryFromUrl);
   const [sortOption, setSortOption] = useState("name");
 
-  // Search products.
+  // --------------------------------------------------
+  // SEARCH
+  // --------------------------------------------------
+
   const searchResults = useSearch(products, search);
 
-  // Filter products by category.
-  const categoryResults = searchResults.filter(matchesCategory);
+  // --------------------------------------------------
+  // CATEGORY FILTER
+  // --------------------------------------------------
 
-  // Sort products.
-  const sortedProducts = useSort(categoryResults, sortOption);
+  const categoryResults = searchResults.filter(matchesCategory);
 
   function matchesCategory(product) {
     return category === "All" || product.category === category;
   }
 
+  // --------------------------------------------------
+  // SORT
+  // --------------------------------------------------
+
+  const sortedProducts = useSort(categoryResults, sortOption);
+
+  // --------------------------------------------------
+  // SEARCH HANDLER
+  // --------------------------------------------------
+
   function handleSearchChange(event) {
     setSearch(event.target.value);
   }
+
+  // --------------------------------------------------
+  // CATEGORY HANDLER
+  // --------------------------------------------------
 
   function handleCategoryChange(event) {
     setCategory(event.target.value);
   }
 
+  // --------------------------------------------------
+  // SORT HANDLER
+  // --------------------------------------------------
+
   function handleSortChange(event) {
     setSortOption(event.target.value);
   }
 
+  // --------------------------------------------------
+  // ADD TO CART
+  // --------------------------------------------------
+
   function handleAddToCart(product) {
-    setCartItems(addOneToCart);
+    setCartItems(function (previousItems) {
+      // Make sure the cart is always an array.
+      let cart = [];
 
-    function addOneToCart(previousItems) {
-      const existing = previousItems.find(matchesId);
-
-      if (existing) {
-        return previousItems.map(incrementIfMatch);
+      if (Array.isArray(previousItems)) {
+        cart = previousItems;
       }
 
-      return [...previousItems, { ...product, quantity: 1 }];
-
-      function matchesId(item) {
+      // Look for the product in the cart.
+      const existingProduct = cart.find(function (item) {
         return item.id === product.id;
+      });
+
+      // Product is already in the cart.
+      if (existingProduct) {
+        const updatedCart = cart.map(function (item) {
+          if (item.id === product.id) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+            };
+          }
+
+          return item;
+        });
+
+        return updatedCart;
       }
 
-      function incrementIfMatch(item) {
-        return item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item;
-      }
-    }
+      // Product is not in the cart yet.
+      const newCartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        src: product.src,
+        category: product.category,
+        quantity: 1,
+      };
+
+      return [...cart, newCartItem];
+    });
   }
+
+  // --------------------------------------------------
+  // PAGE
+  // --------------------------------------------------
 
   return (
     <main className="min-h-screen bg-(--surface) py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Page heading */}
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold text-gray-900">NOVUS Products</h1>
 
@@ -109,12 +166,19 @@ export default function Products() {
                 onChange={handleCategoryChange}
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-(--nova)">
                 <option value="All">All Categories</option>
+
                 <option value="Electronics">Electronics</option>
+
                 <option value="Clothing">Clothing</option>
+
                 <option value="Home">Home</option>
+
                 <option value="Gaming">Gaming</option>
+
                 <option value="Books">Books</option>
+
                 <option value="Jewelry">Jewelry</option>
+
                 <option value="Yoga">Yoga</option>
               </select>
             </div>
@@ -131,7 +195,9 @@ export default function Products() {
                 onChange={handleSortChange}
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-(--nova)">
                 <option value="name">Name A-Z</option>
+
                 <option value="priceLow">Price Low to High</option>
+
                 <option value="priceHigh">Price High to Low</option>
               </select>
             </div>
@@ -157,13 +223,15 @@ export default function Products() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {sortedProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                handleAddToCart={handleAddToCart}
-              />
-            ))}
+            {sortedProducts.map(function (product) {
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  handleAddToCart={handleAddToCart}
+                />
+              );
+            })}
           </div>
         )}
       </div>
@@ -171,8 +239,8 @@ export default function Products() {
   );
 }
 
-// Note: I use conditional rendering to give the user feedback based on the 
-// application's current state. While the API is loading, I display a Loader. If the 
-// API returns an error, I display an error message. If the search and filters return 
-// no products, I tell the user no products were found. Otherwise, I render the 
+// Note: I use conditional rendering to give the user feedback based on the
+// application's current state. While the API is loading, I display a Loader. If the
+// API returns an error, I display an error message. If the search and filters return
+// no products, I tell the user no products were found. Otherwise, I render the
 // products.

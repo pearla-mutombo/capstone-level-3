@@ -5,10 +5,10 @@ import { API_URL } from "../../config/api.js";
 // The server communicates with Prisma and the PostgreSQL database.
 export default function useProducts() {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Run this function when the component first loads.
+  // Load products when the page first opens.
   useEffect(componentDidMount, []);
 
   return [
@@ -20,12 +20,14 @@ export default function useProducts() {
     deleteProduct,
   ];
 
-  // Loads the products when the page first opens.
+  //////////////////////////////////////////////////////
+
+  // Runs when this hook first starts.
   function componentDidMount() {
     loadProducts();
   }
 
-  // READ: Get all products from our API.
+  // READ: Get all products from the API.
   async function loadProducts() {
     try {
       setIsLoading(true);
@@ -39,14 +41,23 @@ export default function useProducts() {
 
       const allProducts = await response.json();
 
+      // Make sure the API returned an array.
+      if (!Array.isArray(allProducts)) {
+        throw new Error("The API did not return a product list.");
+      }
+
       setProducts(allProducts);
     } catch (error) {
       console.error("Load products error:", error);
+
+      setProducts([]);
       setErrorMessage("There was a problem loading the products.");
     } finally {
       setIsLoading(false);
     }
   }
+
+  //////////////////////////////////////////////////////
 
   // CREATE: Add a new product to the database.
   async function createProduct(newProduct) {
@@ -74,9 +85,12 @@ export default function useProducts() {
       }
     } catch (error) {
       console.error("Create product error:", error);
+
       setErrorMessage("There was a problem creating the product.");
     }
   }
+
+  //////////////////////////////////////////////////////
 
   // UPDATE: Change an existing product in the database.
   async function updateProduct(id, updates) {
@@ -104,13 +118,20 @@ export default function useProducts() {
       }
 
       function isUpdatedProduct(product) {
-        return String(product.id) === String(id) ? updatedProduct : product;
+        if (String(product.id) === String(id)) {
+          return updatedProduct;
+        }
+
+        return product;
       }
     } catch (error) {
       console.error("Update product error:", error);
+
       setErrorMessage("There was a problem updating the product.");
     }
   }
+
+  //////////////////////////////////////////////////////
 
   // DELETE: Remove a product from the database.
   async function deleteProduct(id) {
@@ -136,11 +157,11 @@ export default function useProducts() {
       }
     } catch (error) {
       console.error("Delete product error:", error);
+
       setErrorMessage("There was a problem deleting the product.");
     }
   }
 }
-
 // Note:
 // GET → Read "useProducts gets all the products from my Express REST API when the page loads."
 
