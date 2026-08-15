@@ -1,131 +1,81 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
+// Create one shared React context.
+const StateContext = createContext(null);
 
-window[STATE_CONTEXT_LIST] = [];
+export function StateContextProvider({ children, initialState }) {
+  // Create the shared state only once.
+  const [state, setState] = useState(() => {
+    const startingState = new Map(initialState);
 
-export function StateContext({ children, initialState }) {
-  if (!initialState) {
-    throw new Error("StateContext needs an initialState Map.");
-  }
-
-  const [Context, setContext] = useState(null);
-  const [isReady, setIsReady] = useState(false);
-
-  // Create the shared state one time.
-  const [stateMap] = useState(() => {
-    const newState = new Map(initialState);
-
-    // Always make sure cartItems starts as an array.
+    // Load the guest cart from localStorage.
     let savedCart = [];
 
     try {
-      const savedCartText = localStorage.getItem("novus_cart");
+      const savedCart = JSON.parse(localStorage.getItem("novus_cart"));
 
-      if (savedCartText) {
-        const parsedCart = JSON.parse(savedCartText);
-
-        if (Array.isArray(parsedCart)) {
-          savedCart = parsedCart;
-        }
+      if (Array.isArray(savedCart)) {
+        startingState.set("cartItems", savedCart);
+      } else {
+        startingState.set("cartItems", []);
       }
     } catch (error) {
-      console.error("Could not load the saved cart:", error);
+      console.error("Unable to load saved cart:", error);
+
+      startingState.set("cartItems", []);
     }
 
-    newState.set("cartItems", savedCart);
-
-    return newState;
+    return startingState;
   });
-
-  // Store components that are listening for state changes.
-  const [listeners] = useState(new Set());
-
-  useEffect(() => {
-    const NewContext = createContext();
-
-    window[STATE_CONTEXT_LIST].push(NewContext);
-
-    setContext(NewContext);
-    setIsReady(true);
-
-    return () => {
-      const contextIndex = window[STATE_CONTEXT_LIST].indexOf(NewContext);
-
-      if (contextIndex !== -1) {
-        window[STATE_CONTEXT_LIST].splice(contextIndex, 1);
-      }
-    };
-  }, []);
-
-  if (!isReady || !Context) {
-    return null;
-  }
-
-  return (
-    <Context
-      value={{
-        getValue,
-        setValue,
-        hasKey,
-        subscribe,
-        unsubscribe,
-      }}>
-      {children}
-    </Context>
-  );
 
   // Get a value from shared state.
   function getValue(key) {
-    return stateMap.get(key);
+    return state.get(key);
   }
 
   // Change a value in shared state.
-  function setValue(key, newValue) {
-    // Cart must always be an array.
-    if (key === "cartItems" && !Array.isArray(newValue)) {
-      console.error("Cart must be an array. Resetting cart.");
-      newValue = [];
-    }
+  function setValue(key, value) {
+    setState(function updateState(previousState) {
+      const newState = new Map(previousState);
 
-    stateMap.set(key, newValue);
-
-    // Save the cart in the browser.
-    if (key === "cartItems") {
-      try {
-        localStorage.setItem("novus_cart", JSON.stringify(newValue));
-      } catch (error) {
-        console.error("Could not save the cart:", error);
+      // The cart must ALWAYS be an array.
+      if (key === "cartItems" && !Array.isArray(value)) {
+        value = [];
       }
-    }
 
-    // Tell components that the state changed.
-    listeners.forEach((listener) => {
-      if (listener.key === key) {
-        listener.update((version) => version + 1);
+      newState.set(key, value);
+
+      // Save the guest cart.
+      if (key === "cartItems") {
+        try {
+          localStorage.setItem("novus_cart", JSON.stringify(value));
+        } catch (error) {
+          console.error("Unable to save cart:", error);
+        }
       }
+
+      return newState;
     });
   }
 
   // Check whether a state key exists.
   function hasKey(key) {
-    return stateMap.has(key);
+    return state.has(key);
   }
 
-  // Add a component to the listener list.
-  function subscribe(update, key) {
-    listeners.add({
-      update,
-      key,
-    });
-  }
+  return (
+    <StateContext.Provider
+      value={{
+        getValue,
+        setValue,
+        hasKey,
+      }}>
+      {children}
+    </StateContext.Provider>
+  );
+}
 
-  // Remove a component from the listener list.
-  function unsubscribe(update) {
-    for (const listener of listeners) {
-      if (listener.update === update) {
-        listeners.delete(listener);
-      }
-    }
-  }
+// Custom hook used by useStateContext.js.
+export function useStateContextProvider() {
+  return useContext(StateContext);
 }
