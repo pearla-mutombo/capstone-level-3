@@ -2,8 +2,6 @@ import { useContext, useEffect, useState } from "react";
 
 const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
 
-window[STATE_CONTEXT_LIST] = [];
-
 export function useStateContext(key) {
   const Contexts = window[STATE_CONTEXT_LIST];
 
@@ -43,6 +41,25 @@ export function useStateContext(key) {
   }
 
   function setter(newValue) {
+    // Support both:
+    //
+    // setCartItems(newCart)
+    //
+    // and:
+    //
+    // setCartItems(previousCart => newCart)
+    //
+    // This is important because Products.jsx
+    // uses the second form.
+
+    if (typeof newValue === "function") {
+      const currentValue = getValue(key);
+      const updatedValue = newValue(currentValue);
+
+      setValue(key, updatedValue);
+      return;
+    }
+
     setValue(key, newValue);
   }
 }
