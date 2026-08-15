@@ -1,62 +1,43 @@
-import { useContext, useEffect, useState } from "react";
-
-const STATE_CONTEXT_LIST = Symbol.for("STATE_CONTEXT_LIST");
+import { useSharedStateContext } from "../components/StateContext";
 
 export function useStateContext(key) {
-  const contexts = window[STATE_CONTEXT_LIST];
+  const context = useSharedStateContext();
 
-  let sharedContext = null;
-
-  // Find the StateContext that belongs to this component.
-  for (let index = 0; index < contexts.length; index++) {
-    const contextValue = useContext(contexts[index]);
-
-    if (contextValue) {
-      sharedContext = contextValue;
-    }
+  // Make sure the StateContext exists.
+  if (!context) {
+    throw new Error(
+      "useStateContext must be used inside StateContextProvider.",
+    );
   }
 
-  // Make sure the state exists.
-  if (!key) {
-    throw new Error("useStateContext needs a state key.");
+  // Make sure the requested key exists.
+  if (!context.hasKey(key)) {
+    throw new Error(`Invalid state key: ${key}`);
   }
 
-  if (!sharedContext) {
-    throw new Error("This component must be inside StateContext.");
-  }
+  const value = context.getValue(key);
 
-  if (!sharedContext.hasKey(key)) {
-    throw new Error(`The state key "${key}" does not exist.`);
-  }
+  // Create a setter for the requested state value.
+  function setValue(newValue) {
+    // Support:
+    //
+    // setCartItems(newCart)
+    //
+    // and:
+    //
+    // setCartItems((previousItems) => newCart)
 
-  const { getValue, setValue, subscribe, unsubscribe } = sharedContext;
-
-  // Get the current value.
-  const value = getValue(key);
-
-  // This causes the component to update when shared state changes.
-  const [, setStateVersion] = useState(0);
-
-  useEffect(() => {
-    subscribe(setStateVersion, key);
-
-    return () => {
-      unsubscribe(setStateVersion);
-    };
-  }, []);
-
-  // Allow normal values AND function updates.
-  function setter(newValue) {
     if (typeof newValue === "function") {
-      const currentValue = getValue(key);
+      const currentValue = context.getValue(key);
       const updatedValue = newValue(currentValue);
 
-      setValue(key, updatedValue);
+      context.setValue(key, updatedValue);
+
       return;
     }
 
-    setValue(key, newValue);
+    context.setValue(key, newValue);
   }
 
-  return [value, setter];
+  return [value, setValue];
 }

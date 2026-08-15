@@ -15,45 +15,61 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import Page404 from "./components/Page404";
 import { RedirectGitHub404 } from "./components/RedirectGitHub404";
 
-import { StateContext } from "./components/StateContext";
+import { StateContextProvider } from "./components/StateContext";
 
 import { repoRoot } from "../config/repoRoot.js";
 
 import "./App.css";
 
+// Starting shared state for NOVUS Market.
 const initialState = new Map([
+  // Login information.
   ["login", { email: "", password: "" }],
+
+  // Shopping cart.
+  // The cart starts as an empty array.
   ["cartItems", []],
 ]);
 
-function App() {
+export default function App() {
   return (
-    <StateContext initialState={initialState}>
+    <StateContextProvider initialState={initialState}>
       <BrowserRouter basename={repoRoot}>
         <RedirectGitHub404 />
 
         <Header />
 
         <Routes>
+          {/* Home page */}
           <Route path="/" element={<Home />} />
+
+          {/* Products page */}
           <Route path="/products" element={<Products />} />
+
+          {/* Shopping cart */}
           <Route path="/cart" element={<Cart />} />
 
+          {/* Login page */}
           <Route path="/login" element={<Login />} />
+
+          {/* Registration page */}
           <Route path="/register" element={<Register />} />
 
+          {/* User dashboard */}
           <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* User profile */}
           <Route path="/profile" element={<Profile />} />
 
+          {/* Administrator dashboard */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
+          {/* Page shown when a route does not exist */}
           <Route path="*" element={<Page404 />} />
         </Routes>
 
         <Footer />
       </BrowserRouter>
-    </StateContext>
+    </StateContextProvider>
   );
 }
-
-export default App;
