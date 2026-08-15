@@ -4,24 +4,29 @@ import { createContext, useContext, useState } from "react";
 const StateContext = createContext(null);
 
 export function StateContextProvider({ children, initialState }) {
-  // Create the shared state only once.
+  // Create the shared state.
   const [state, setState] = useState(() => {
     const startingState = new Map(initialState);
 
-    // Load the guest cart from localStorage.
-    let savedCart = [];
-
+    // Get the saved cart from the browser.
     try {
-      const savedCart = JSON.parse(localStorage.getItem("novus_cart"));
+      const savedCartText = localStorage.getItem("novus_cart");
 
-      if (Array.isArray(savedCart)) {
-        startingState.set("cartItems", savedCart);
-      } else {
-        startingState.set("cartItems", []);
+      if (savedCartText) {
+        const savedCart = JSON.parse(savedCartText);
+
+        // Only use the saved value if it is an array.
+        if (Array.isArray(savedCart)) {
+          startingState.set("cartItems", savedCart);
+        }
       }
     } catch (error) {
       console.error("Unable to load saved cart:", error);
+      startingState.set("cartItems", []);
+    }
 
+    // Make sure cartItems always starts as an array.
+    if (!Array.isArray(startingState.get("cartItems"))) {
       startingState.set("cartItems", []);
     }
 
@@ -38,7 +43,7 @@ export function StateContextProvider({ children, initialState }) {
     setState(function updateState(previousState) {
       const newState = new Map(previousState);
 
-      // The cart must ALWAYS be an array.
+      // cartItems must always be an array.
       if (key === "cartItems" && !Array.isArray(value)) {
         value = [];
       }
@@ -75,7 +80,7 @@ export function StateContextProvider({ children, initialState }) {
   );
 }
 
-// Custom hook used by useStateContext.js.
-export function useStateContextProvider() {
+// Give other files access to the shared context.
+export function useSharedStateContext() {
   return useContext(StateContext);
 }
