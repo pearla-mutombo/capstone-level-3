@@ -5,60 +5,79 @@ export default function Cart() {
   // Get the shared cart and its setter from StateContext.
   const [cartItems, setCartItems] = useStateContext("cartItems");
 
+  // Make sure the cart is always an array.
+  // This prevents .map() and .filter() errors.
+  const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+
   // Remove one product completely from the cart.
   function handleRemoveItem(productId) {
-    const updatedCart = cartItems.filter(matchesProduct);
+    const updatedCart = [];
+
+    for (let index = 0; index < safeCartItems.length; index++) {
+      const item = safeCartItems[index];
+
+      if (item.id !== productId) {
+        updatedCart.push(item);
+      }
+    }
 
     setCartItems(updatedCart);
-
-    function matchesProduct(item) {
-      return item.id !== productId;
-    }
   }
 
   // Increase the quantity of a product.
   function handleIncreaseQuantity(productId) {
-    const updatedCart = cartItems.map(increaseQuantity);
+    const updatedCart = [];
 
-    setCartItems(updatedCart);
+    for (let index = 0; index < safeCartItems.length; index++) {
+      const item = safeCartItems[index];
 
-    function increaseQuantity(item) {
       if (item.id === productId) {
-        return {
+        const updatedItem = {
           ...item,
           quantity: item.quantity + 1,
         };
-      }
 
-      return item;
+        updatedCart.push(updatedItem);
+      } else {
+        updatedCart.push(item);
+      }
     }
+
+    setCartItems(updatedCart);
   }
 
   // Decrease the quantity of a product.
   function handleDecreaseQuantity(productId) {
-    const updatedCart = cartItems.map(decreaseQuantity);
+    const updatedCart = [];
 
-    setCartItems(updatedCart);
+    for (let index = 0; index < safeCartItems.length; index++) {
+      const item = safeCartItems[index];
 
-    function decreaseQuantity(item) {
       if (item.id === productId && item.quantity > 1) {
-        return {
+        const updatedItem = {
           ...item,
           quantity: item.quantity - 1,
         };
-      }
 
-      return item;
+        updatedCart.push(updatedItem);
+      } else {
+        updatedCart.push(item);
+      }
     }
+
+    setCartItems(updatedCart);
   }
 
-  // Calculate the total price of all products in the cart.
+  // Calculate the total price of all products.
   function calculateTotal() {
     let total = 0;
 
-    for (let index = 0; index < cartItems.length; index++) {
-      const item = cartItems[index];
-      total = total + Number(item.price) * item.quantity;
+    for (let index = 0; index < safeCartItems.length; index++) {
+      const item = safeCartItems[index];
+
+      const itemTotal = Number(item.price) * item.quantity;
+
+      total = total + itemTotal;
     }
 
     return total;
@@ -78,8 +97,8 @@ export default function Cart() {
           Your Shopping Cart
         </h1>
 
-        {/* Conditional rendering: show an empty-cart message or the cart. */}
-        {cartItems.length === 0 ? (
+        {/* Show an empty message when the cart has no products. */}
+        {safeCartItems.length === 0 ? (
           <div className="rounded-xl bg-white p-10 text-center shadow-md">
             <h2 className="mb-4 text-2xl font-semibold">Your cart is empty</h2>
 
@@ -91,7 +110,7 @@ export default function Cart() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Cart Items */}
             <div className="space-y-4 lg:col-span-2">
-              {cartItems.map((item) => (
+              {safeCartItems.map((item) => (
                 <article
                   key={item.id}
                   className="rounded-xl bg-white p-6 shadow-md">
@@ -152,7 +171,8 @@ export default function Cart() {
 
               <div className="mb-4 flex justify-between">
                 <span>Items</span>
-                <span>{cartItems.length}</span>
+
+                <span>{safeCartItems.length}</span>
               </div>
 
               <div className="flex justify-between border-t pt-4 text-xl font-bold">
