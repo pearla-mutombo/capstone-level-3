@@ -2,12 +2,16 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 
+// Deployed NOVUS Market API
+const API_URL = "https://novus-market-api.onrender.com";
+
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registerError, setRegisterError] = useState("");
   const [registerMessage, setRegisterMessage] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,7 +39,9 @@ export default function Register() {
     setRegisterError("");
     setRegisterMessage("");
 
-    if (email === "" || password === "" || confirmPassword === "") {
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail || !password || !confirmPassword) {
       setRegisterError("Please complete all fields.");
       return;
     }
@@ -50,19 +56,23 @@ export default function Register() {
       return;
     }
 
+    setIsRegistering(true);
+
     try {
-      const response = await fetch("http://localhost:3001/api/register", {
+      const response = await fetch(`${API_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          email: cleanEmail,
           password,
         }),
       });
 
       const data = await response.json();
+
+      console.log("REGISTER DATA FROM SERVER:", data);
 
       if (!response.ok) {
         setRegisterError(data.error || "Unable to create your account.");
@@ -79,6 +89,8 @@ export default function Register() {
     } catch (error) {
       console.error("Register request error:", error);
       setRegisterError("Unable to connect to the server. Please try again.");
+    } finally {
+      setIsRegistering(false);
     }
   }
 
@@ -96,13 +108,17 @@ export default function Register() {
         </div>
 
         {registerError && (
-          <div className="mb-6 rounded-lg border border-red-300 bg-red-100 p-4 text-red-700">
+          <div
+            className="mb-6 rounded-lg border border-red-300 bg-red-100 p-4 text-red-700"
+            role="alert">
             {registerError}
           </div>
         )}
 
         {registerMessage && (
-          <div className="mb-6 rounded-lg border border-green-300 bg-green-100 p-4 text-green-700">
+          <div
+            className="mb-6 rounded-lg border border-green-300 bg-green-100 p-4 text-green-700"
+            role="status">
             {registerMessage}
           </div>
         )}
@@ -122,7 +138,8 @@ export default function Register() {
               onChange={handleEmailChange}
               placeholder="you@novusmarket.com"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              disabled={isRegistering}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:bg-gray-100"
             />
           </div>
 
@@ -140,7 +157,8 @@ export default function Register() {
               onChange={handlePasswordChange}
               placeholder="Create a password"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              disabled={isRegistering}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:bg-gray-100"
             />
           </div>
 
@@ -158,11 +176,14 @@ export default function Register() {
               onChange={handleConfirmPasswordChange}
               placeholder="Confirm your password"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              disabled={isRegistering}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:bg-gray-100"
             />
           </div>
 
-          <Button type="submit">Create Account</Button>
+          <Button type="submit" disabled={isRegistering}>
+            {isRegistering ? "Creating Account..." : "Create Account"}
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-gray-600">
