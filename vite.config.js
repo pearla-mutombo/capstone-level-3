@@ -16,8 +16,8 @@ export default defineConfig({
   },
 });
 
-// Note: I configured Vite with my GitHub Pages base path so my React 
+// Note: I configured Vite with my GitHub Pages base path so my React
 // application knows where it is deployed. I also configured a development
-//  proxy so API requests from my React frontend can communicate with my 
-// local Express server without having to put the localhost server address 
+//  proxy so API requests from my React frontend can communicate with my
+// local Express server without having to put the localhost server address
 // throughout my components.
